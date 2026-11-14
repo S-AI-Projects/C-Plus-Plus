@@ -1,0 +1,26 @@
+{
+  "task": "R22-T001",
+  "file_under_test": "operations_on_datastructures/circular_queue_using_array.cpp",
+  "function_under_test": "Enque",
+  "timestamp": "2026-11-14T19:33:08+0530",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "python_version": "3.15.0",
+  "compiler": "g++",
+  "compiler_version": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+  "compile_command": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-o",
+    "/Users/honeybunnyworksgmail.com/.gemini/antigravity/scratch/C-Plus-Plus/work/R22-T001/build/circular_queue_test",
+    "/Users/honeybunnyworksgmail.com/.gemini/antigravity/scratch/C-Plus-Plus/operations_on_datastructures/circular_queue_using_array_test.cpp"
+  ],
+  "compile_returncode": 0,
+  "test_stdout": "=== circular_queue_using_array \u2014 Enque regression tests ===\n  Running: test_fixture_enque_deque_order ... PASS\n  Running: test_empty_state_underflow ... PASS\n  Running: test_single_enque_deque ... PASS\n  Running: test_repeated_values ... PASS\n  Running: test_overflow ... PASS\n  Running: test_wraparound ... PASS\n\n=== Results: 6 / 6 passed ===\nAll tests passed.\n",
+  "test_stderr": "",
+  "test_returncode": 0,
+  "test_count": 6,
+  "outcome": "PASS"
+}
