@@ -1,0 +1,25 @@
+{
+  "task": "R22-T003",
+  "file_under_test": "sorting/random_pivot_quick_sort.cpp",
+  "function_under_test": "sorting::random_pivot_quick_sort::showArray",
+  "timestamp": "2026-11-16T01:36:04+0530",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "python_version": "3.15.0",
+  "compiler": "g++",
+  "compile_command": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-o",
+    "/Users/honeybunnyworksgmail.com/.gemini/antigravity/scratch/C-Plus-Plus/work/R22-T003/build/random_pivot_quick_sort",
+    "/Users/honeybunnyworksgmail.com/.gemini/antigravity/scratch/C-Plus-Plus/sorting/random_pivot_quick_sort.cpp"
+  ],
+  "compile_returncode": 0,
+  "test_stdout": "[TESTS] : ---> Running Tests...\n[TESTS] : ---> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n[TESTS] : ---> This is test case 1 for Random Pivot Quick Sort Algorithm : \n[TESTS] : ---> Description:\n[TESTS] : --->    EDGE CASE : Only contains one element\n[TESTS] : ---> Running algorithm of data of length 50 ...\n[TESTS] : ---> Algorithm finished!\n[TESTS] : ---> Checking assert expression...\n[TESTS] : ---> Assertion check passed!\n[TESTS] : ---> [PASS] : TEST CASE 1 PASS!\n[TESTS] : ---> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n[TESTS] : ---> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n[TESTS] : ---> Description:\n[TESTS] : --->    BIG INPUT : Contains 500 elements and repeated elements\n[TESTS] : ---> This is test case 2 for Random Pivot Quick Sort Algorithm : \n[TESTS] : ---> Running algorithm of data of length 500 ...\n[TESTS] : ---> Algorithm finished!\n[TESTS] : ---> Checking assert expression...\n[TESTS] : ---> Assertion check passed!\n[TESTS] : ---> [PASS] : TEST CASE 2 PASS!\n[TESTS] : ---> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n[TESTS] : ---> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n[TESTS] : ---> This is test case 3 for Random Pivot Quick Sort Algorithm : \n[TESTS] : ---> Description:\n[TESTS] : --->    LARGE INPUT : Contains 1000 elements and repeated elements\n[TESTS] : ---> Running algorithm...\n[TESTS] : ---> Algorithm finished!\n[TESTS] : ---> Checking assert expression...\n[TESTS] : ---> Assertion check passed!\n[TESTS] : ---> [PASS] : TEST CASE 3 PASS!\n[TESTS] : ---> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n[TESTS] : ---> Running Reference Comparison & showArray Contract Tests...\n[TESTS] : ---> [PASS] : REFERENCE COMPARISON & CONTRACT TESTS PASS (26 checks)!\n[TESTS] : ---> Test Cases over!\n\nUnsorted array is : \n826 201 971 634 186 460 651 619 600 237 \nSorted array is : \n186 201 237 460 600 619 634 651 826 971 \n",
+  "test_stderr": "",
+  "test_returncode": 0,
+  "test_count": 30,
+  "outcome": "PASS"
+}

@@ -44,12 +44,14 @@
  * @author [Nitin Sharma](https://github.com/foo290)
  */
 
-#include <algorithm>  /// for std::is_sorted(), std::swap()
+#include <algorithm>  /// for std::is_sorted(), std::swap(), std::count()
 #include <array>      /// for std::array
 #include <cassert>    /// for assert
 #include <ctime>      /// for initializing random number generator
 #include <iostream>   /// for IO operations
+#include <sstream>    /// for stringstream buffer redirection
 #include <tuple>      /// for returning multiple values form a function at once
+#include <vector>     /// for vector test cases
 
 /**
  * @namespace sorting
@@ -65,6 +67,18 @@ namespace sorting {
 namespace random_pivot_quick_sort {
 /**
  * @brief Utility function to print the array
+ * @details
+ * Outputs the elements of the given array separated by a single space, terminated
+ * with a newline.
+ *
+ * Mutation & Return Contract:
+ * - Passed by value: input array in caller scope remains completely unmutated.
+ * - Return value: void.
+ *
+ * Representative Result:
+ * For array `{3, 1, 2}`, `showArray` outputs `"3 1 2 \n"`.
+ * Once sorted with `quickSortRP()`, the resulting array `{1, 2, 3}` produces `"1 2 3 \n"`.
+ *
  * @tparam T size of the array
  * @param arr array used to print its content
  * @returns void
@@ -202,9 +216,127 @@ class TestCases {
         testCase_1();
         testCase_2();
         testCase_3();
+        testReferenceComparison();
 
         log("Test Cases over!");
         std::cout << std::endl;
+    }
+
+    /**
+     * @brief Independent reference insertion sort for cross-checking
+     */
+    template <size_t N>
+    static std::array<int64_t, N> referenceSort(std::array<int64_t, N> a) {
+        for (size_t i = 1; i < N; ++i) {
+            int64_t key = a[i];
+            size_t j = i;
+            while (j > 0 && a[j - 1] > key) {
+                a[j] = a[j - 1];
+                --j;
+            }
+            a[j] = key;
+        }
+        return a;
+    }
+
+    /**
+     * @brief Cross-checks showArray and quickSortRP against independent oracle and fixtures
+     */
+    void testReferenceComparison() {
+        log("Running Reference Comparison & showArray Contract Tests...");
+
+        // 1. Check showArray mutation and stream format
+        {
+            std::array<int64_t, 3> orig{3, 1, 2};
+            std::array<int64_t, 3> copy = orig;
+            std::stringstream ss;
+            auto* old_buf = std::cout.rdbuf(ss.rdbuf());
+            sorting::random_pivot_quick_sort::showArray(orig);
+            std::cout.rdbuf(old_buf);
+
+            // Verify string representation
+            assert(ss.str() == "3 1 2 \n");
+            // Verify source array was not mutated by showArray
+            assert(orig == copy);
+        }
+
+        // 2. Fixture cases from task specification
+        // Fixture 1: [3, 1, 2] -> [1, 2, 3]
+        {
+            std::array<int64_t, 3> input{3, 1, 2};
+            auto res = sorting::random_pivot_quick_sort::quickSortRP(input, 0, 2);
+            std::array<int64_t, 3> expected{1, 2, 3};
+            assert(res == expected);
+        }
+        // Fixture 2: [2, 2, 1] -> [1, 2, 2] (preserves multiplicity)
+        {
+            std::array<int64_t, 3> input{2, 2, 1};
+            auto res = sorting::random_pivot_quick_sort::quickSortRP(input, 0, 2);
+            std::array<int64_t, 3> expected{1, 2, 2};
+            assert(res == expected);
+        }
+        // Fixture 3: Already ordered [1, 2, 3] -> [1, 2, 3]
+        {
+            std::array<int64_t, 3> input{1, 2, 3};
+            auto res = sorting::random_pivot_quick_sort::quickSortRP(input, 0, 2);
+            std::array<int64_t, 3> expected{1, 2, 3};
+            assert(res == expected);
+        }
+        // Fixture 4: Reversed [3, 2, 1] -> [1, 2, 3]
+        {
+            std::array<int64_t, 3> input{3, 2, 1};
+            auto res = sorting::random_pivot_quick_sort::quickSortRP(input, 0, 2);
+            std::array<int64_t, 3> expected{1, 2, 3};
+            assert(res == expected);
+        }
+        // Fixture 5: Smallest supported collection [42] -> [42]
+        {
+            std::array<int64_t, 1> input{42};
+            auto res = sorting::random_pivot_quick_sort::quickSortRP(input, 0, 0);
+            std::array<int64_t, 1> expected{42};
+            assert(res == expected);
+        }
+
+        // 3. Oracle comparison across >= 20 small valid inputs
+        std::vector<std::vector<int64_t>> test_suite = {
+            {5}, {0}, {-7},
+            {2, 1}, {1, 2}, {4, 4}, {-3, -5}, {0, -1},
+            {9, 4, 7}, {-1, -2, -3}, {0, 0, 0}, {5, 1, 5},
+            {4, 2, 3, 1}, {1, 1, 1, 1}, {10, -10, 5, -5}, {3, 1, 4, 1},
+            {5, 4, 3, 2, 1}, {1, 2, 3, 4, 5}, {2, 2, 3, 1, 1}, {-2, 0, -5, 4, 1}
+        };
+        assert(test_suite.size() >= 20);
+
+        for (const auto& vec : test_suite) {
+            if (vec.size() == 1) {
+                std::array<int64_t, 1> in{vec[0]};
+                auto expected = referenceSort(in);
+                auto actual = sorting::random_pivot_quick_sort::quickSortRP(in, 0, 0);
+                assert(actual == expected);
+            } else if (vec.size() == 2) {
+                std::array<int64_t, 2> in{vec[0], vec[1]};
+                auto expected = referenceSort(in);
+                auto actual = sorting::random_pivot_quick_sort::quickSortRP(in, 0, 1);
+                assert(actual == expected);
+            } else if (vec.size() == 3) {
+                std::array<int64_t, 3> in{vec[0], vec[1], vec[2]};
+                auto expected = referenceSort(in);
+                auto actual = sorting::random_pivot_quick_sort::quickSortRP(in, 0, 2);
+                assert(actual == expected);
+            } else if (vec.size() == 4) {
+                std::array<int64_t, 4> in{vec[0], vec[1], vec[2], vec[3]};
+                auto expected = referenceSort(in);
+                auto actual = sorting::random_pivot_quick_sort::quickSortRP(in, 0, 3);
+                assert(actual == expected);
+            } else if (vec.size() == 5) {
+                std::array<int64_t, 5> in{vec[0], vec[1], vec[2], vec[3], vec[4]};
+                auto expected = referenceSort(in);
+                auto actual = sorting::random_pivot_quick_sort::quickSortRP(in, 0, 4);
+                assert(actual == expected);
+            }
+        }
+
+        log("[PASS] : REFERENCE COMPARISON & CONTRACT TESTS PASS (26 checks)!");
     }
 
     /**
