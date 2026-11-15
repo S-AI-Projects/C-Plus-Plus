@@ -28,6 +28,7 @@
 #include <cassert>   /// for assert
 #include <cstdint>
 #include <iostream>  /// for IO operations
+#include <sstream>   /// for std::stringstream (stream capture)
 #include <vector>    /// for std::vector
 
 /**
@@ -52,6 +53,12 @@ struct Node {
 
 /**
  * @brief A simple function to print the linked list
+ * @details
+ * Protected Invariants and Mutation Contract:
+ * - Traversal Invariant: Traversal terminates when start == nullptr and visits each node exactly once.
+ * - Non-Mutation Contract: Traverses via a copy of the pointer; does not alter node data or link topology.
+ * - Output format: Outputs "->" followed by node data, terminated by a single newline.
+ *
  * @param start The head of the linked list
  * @returns void
  */
@@ -189,9 +196,65 @@ class TestCases {
         testCase_1();
         testCase_2();
         testCase_3();
+        testPrintLinkedListRegression();
 
         log("Test Cases over!");
         std::cout << std::endl;
+    }
+
+    /**
+     * @brief Focused regression testing printLinkedList invariants and mutation resistance
+     */
+    void testPrintLinkedListRegression() {
+        log("Running printLinkedList regression tests...");
+
+        using search::sublist_search::Node;
+
+        // 1. Fixture: Three distinct nodes A -> B -> C
+        Node nodeC{30, nullptr};
+        Node nodeB{20, &nodeC};
+        Node nodeA{10, &nodeB};
+
+        // Capture stdout
+        std::stringstream ss_abc;
+        auto* old_buf = std::cout.rdbuf(ss_abc.rdbuf());
+        search::sublist_search::printLinkedList(&nodeA);
+        std::cout.rdbuf(old_buf);
+
+        // Assert explicit expected output
+        assert(ss_abc.str() == "->10->20->30\n");
+
+        // Verify values separately
+        assert(nodeA.data == 10);
+        assert(nodeB.data == 20);
+        assert(nodeC.data == 30);
+
+        // Verify node links separately (ensuring broken links cannot hide behind value checks)
+        assert(nodeA.next == &nodeB);
+        assert(nodeB.next == &nodeC);
+        assert(nodeC.next == nullptr);
+
+        // 2. Smallest supported list (single node)
+        Node nodeSingle{42, nullptr};
+        std::stringstream ss_single;
+        old_buf = std::cout.rdbuf(ss_single.rdbuf());
+        search::sublist_search::printLinkedList(&nodeSingle);
+        std::cout.rdbuf(old_buf);
+
+        assert(ss_single.str() == "->42\n");
+        assert(nodeSingle.data == 42);
+        assert(nodeSingle.next == nullptr);
+
+        // 3. Empty list boundary
+        Node* emptyList = nullptr;
+        std::stringstream ss_empty;
+        old_buf = std::cout.rdbuf(ss_empty.rdbuf());
+        search::sublist_search::printLinkedList(emptyList);
+        std::cout.rdbuf(old_buf);
+
+        assert(ss_empty.str() == "\n");
+
+        log("[PASS] : printLinkedList REGRESSION TESTS PASS!");
     }
 
     /**
