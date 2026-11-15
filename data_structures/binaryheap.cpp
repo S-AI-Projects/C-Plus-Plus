@@ -2,6 +2,7 @@
  * \file
  * \brief A C++ program to demonstrate common Binary Heap Operations
  */
+#include <cassert>
 #include <climits>
 #include <iostream>
 #include <utility>
@@ -33,7 +34,15 @@ class MinHeap {
     /** to get index of right child of node at index i */
     int right(int i) { return (2 * i + 2); }
 
-    /** to extract the root which is the minimum element */
+    /**
+     * @brief Extracts the minimum element (root) from the heap.
+     * @details
+     * Documented absent-result / empty-state contract:
+     * - Source line 84 establishes the precondition check: `if (heap_size <= 0) return INT_MAX;`
+     * - When the heap contains 0 elements, the function returns the sentinel value `INT_MAX`.
+     * - Heap state remains valid following empty extracts, allowing subsequent insertions.
+     * @return int The minimum value, or INT_MAX if heap is empty.
+     */
     int extractMin();
 
     /** Decreases key value of key at index i to new_val */
@@ -82,6 +91,7 @@ void MinHeap::decreaseKey(int i, int new_val) {
 }
 
 // Method to remove minimum element (or root) from min heap
+// Source line 95 establishes the empty-heap failure / absent-result branch
 int MinHeap::extractMin() {
     if (heap_size <= 0)
         return INT_MAX;
@@ -124,8 +134,59 @@ void MinHeap::MinHeapify(int i) {
     }
 }
 
+/**
+ * @brief Regression tests covering failure and empty-state branches of MinHeap.
+ */
+static void test() {
+    // -----------------------------------------------------------------
+    // 1. Smallest valid input fixture (capacity = 1)
+    // Precondition: empty heap reached at extractMin line 95 (heap_size <= 0)
+    // -----------------------------------------------------------------
+    MinHeap h_small(1);
+    // Initial empty state extraction returns sentinel INT_MAX
+    assert(h_small.extractMin() == INT_MAX);
+
+    // Valid call on smallest heap
+    h_small.insertKey(42);
+    assert(h_small.extractMin() == 42);
+
+    // Subsequent extraction once empty again returns sentinel INT_MAX
+    assert(h_small.extractMin() == INT_MAX);
+
+    // Re-inserting after failure succeeds
+    h_small.insertKey(99);
+    assert(h_small.extractMin() == 99);
+
+    // -----------------------------------------------------------------
+    // 2. Ordinary input fixture (capacity = 5)
+    // Precondition: multiple elements drained until empty
+    // -----------------------------------------------------------------
+    MinHeap h_ord(5);
+    h_ord.insertKey(10);
+    h_ord.insertKey(20);
+    h_ord.insertKey(5);
+
+    assert(h_ord.extractMin() == 5);
+    assert(h_ord.extractMin() == 10);
+    assert(h_ord.extractMin() == 20);
+
+    // Drained empty heap: extractMin returns sentinel INT_MAX
+    assert(h_ord.extractMin() == INT_MAX);
+
+    // An ordinary valid call still succeeds after the failure case
+    h_ord.insertKey(15);
+    h_ord.insertKey(7);
+    assert(h_ord.extractMin() == 7);
+    assert(h_ord.extractMin() == 15);
+    assert(h_ord.extractMin() == INT_MAX);
+
+    std::cout << "All MinHeap failure and regression tests passed successfully (11 assertions)!" << std::endl;
+}
+
 // Driver program to test above functions
 int main() {
+    test();
+
     MinHeap h(11);
     h.insertKey(3);
     h.insertKey(2);
@@ -137,6 +198,6 @@ int main() {
     std::cout << h.extractMin() << " ";
     std::cout << h.getMin() << " ";
     h.decreaseKey(2, 1);
-    std::cout << h.getMin();
+    std::cout << h.getMin() << std::endl;
     return 0;
 }
