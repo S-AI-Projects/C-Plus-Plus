@@ -1,0 +1,25 @@
+{
+  "task": "R22-T007",
+  "file_under_test": "dynamic_programming/longest_palindromic_subsequence.cpp",
+  "function_under_test": "dynamic_programming::lps",
+  "timestamp": "2026-11-16T01:43:15+0530",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "python_version": "3.15.0",
+  "compiler": "g++",
+  "compile_command": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-o",
+    "/Users/honeybunnyworksgmail.com/.gemini/antigravity/scratch/C-Plus-Plus/work/R22-T007/build/longest_palindromic_subsequence",
+    "/Users/honeybunnyworksgmail.com/.gemini/antigravity/scratch/C-Plus-Plus/dynamic_programming/longest_palindromic_subsequence.cpp"
+  ],
+  "compile_returncode": 0,
+  "test_stdout": "All LPS tests and worked examples passed successfully (8 assertions)!\n",
+  "test_stderr": "",
+  "test_returncode": 0,
+  "test_count": 8,
+  "outcome": "PASS"
+}
