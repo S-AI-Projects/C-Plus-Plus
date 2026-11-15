@@ -7,6 +7,19 @@ int front = 0;
 int rear = 0;
 int count = 0;
 
+/**
+ * @brief Enqueue an element into the circular queue.
+ *
+ * @param x The integer value to insert at the rear of the queue.
+ *
+ * **Contract:**
+ * - Pre-condition : `count < 10` (queue is not full).
+ * - Post-condition: `queue[old_rear] == x`,
+ *                   `rear == (old_rear + 1) % 10`,
+ *                   `count == old_count + 1`.
+ * - Overflow      : When `count == 10`, prints "\nOverflow" to stdout
+ *                   and leaves the queue unchanged.
+ */
 void Enque(int x) {
     if (count == 10) {
         cout << "\nOverflow";
