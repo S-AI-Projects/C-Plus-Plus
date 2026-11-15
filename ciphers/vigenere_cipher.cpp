@@ -44,14 +44,15 @@ namespace ciphers {
     namespace vigenere {   
         namespace {
             /**
-             * This function finds character for given value (i.e.A-Z)
-             * @param x value for which we want character 
-             * @return  corresponding character for perticular value
+             * This function maps a 0-25 alphabet index to its uppercase character ('A'-'Z').
+             * @details Refactored calculation: Replaced magic literal 65 and C-style cast with
+             * explicit `kAlphabetBase` ('A') offset calculation and type-safe `static_cast<char>`.
+             * @param x 0-indexed alphabet value (0 to 25)
+             * @return corresponding uppercase character ('A' to 'Z')
              */        
             inline char get_char(const int x) {
-                // By adding 65 we are scaling 0-25 to 65-90. 
-                // Which are in fact ASCII values of A-Z. 
-                return char(x + 65); 
+                constexpr char kAlphabetBase = 'A';
+                return static_cast<char>(kAlphabetBase + x); 
             }
             /**
              * This function finds value for given character (i.e.0-25)
@@ -109,7 +110,12 @@ namespace ciphers {
  * Function to test above algorithm
  */
 void test() {
-    // Test 1
+    // Contract regression assertions directly on get_char domain mappings
+    assert(ciphers::vigenere::get_char(0) == 'A');
+    assert(ciphers::vigenere::get_char(1) == 'B');
+    assert(ciphers::vigenere::get_char(25) == 'Z');
+
+    // Executable source anchor 1
     std::string text1 = "NIKOLATESLA";
     std::string encrypted1 = ciphers::vigenere::encrypt(text1, "TESLA");
     std::string decrypted1 = ciphers::vigenere::decrypt(encrypted1, "TESLA");
@@ -117,7 +123,8 @@ void test() {
     std::cout << "Original text : " << text1;
     std::cout << " , Encrypted text (with key = TESLA) : " << encrypted1;
     std::cout << " , Decrypted text : "<< decrypted1 << std::endl;
-    // Test 2
+
+    // Executable source anchor 2
     std::string text2 = "GOOGLEIT";
     std::string encrypted2 = ciphers::vigenere::encrypt(text2, "REALLY");
     std::string decrypted2 = ciphers::vigenere::decrypt(encrypted2, "REALLY");
@@ -125,6 +132,18 @@ void test() {
     std::cout << "Original text : " << text2;
     std::cout << " , Encrypted text (with key = REALLY) : " << encrypted2;
     std::cout << " , Decrypted text : "<< decrypted2 << std::endl;
+
+    // Derived neighboring supported input:
+    // One character neighbor of text1: "NIKOLATESLB" with key "TESLA"
+    // Independently calculated expected ciphertext: "GMCZLTXWDLU"
+    std::string text3 = "NIKOLATESLB";
+    std::string encrypted3 = ciphers::vigenere::encrypt(text3, "TESLA");
+    assert(encrypted3 == "GMCZLTXWDLU");
+    std::string decrypted3 = ciphers::vigenere::decrypt(encrypted3, "TESLA");
+    assert(text3 == decrypted3);
+    std::cout << "Original text : " << text3;
+    std::cout << " , Encrypted text (with key = TESLA) : " << encrypted3;
+    std::cout << " , Decrypted text : "<< decrypted3 << std::endl;
 }
 
 /** Driver Code */
