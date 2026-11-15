@@ -1,0 +1,25 @@
+{
+  "task": "R22-T002",
+  "file_under_test": "math/check_prime.cpp",
+  "function_under_test": "math::is_prime",
+  "timestamp": "2026-11-16T01:34:17+0530",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "python_version": "3.15.0",
+  "compiler": "g++",
+  "compile_command": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-o",
+    "/Users/honeybunnyworksgmail.com/.gemini/antigravity/scratch/C-Plus-Plus/work/R22-T002/build/check_prime",
+    "/Users/honeybunnyworksgmail.com/.gemini/antigravity/scratch/C-Plus-Plus/math/check_prime.cpp"
+  ],
+  "compile_returncode": 0,
+  "test_stdout": "All is_prime tests passed successfully (25 assertions)!\n",
+  "test_stderr": "",
+  "test_returncode": 0,
+  "test_count": 25,
+  "outcome": "PASS"
+}

@@ -16,6 +16,7 @@
 
 #include <cassert>   /// for assert
 #include <iostream>  /// for IO operations
+#include <vector>    /// for vector in boundary tests
 
 /**
  * @brief Mathematical algorithms
@@ -24,9 +25,24 @@
 namespace math {
 /**
  * @brief Function to check if the given number is prime or not.
- * @param num number to be checked.
- * @return true if number is a prime
- * @return false if number is not a prime.
+ *
+ * @param num number to be checked (any signed 64-bit integer).
+ * @return true if number is prime (>= 2).
+ * @return false if number is not prime (including <= 1, negatives, composites).
+ *
+ * @details
+ * Supported boundary table and source contract:
+ * | Domain / Boundary Class | Condition | Expected Output | Contract Clause |
+ * | :--- | :--- | :--- | :--- |
+ * | Negative numbers | `num < 0` | `false` | Primes are natural numbers >= 2 |
+ * | Zero | `num == 0` | `false` | Not prime |
+ * | Unit boundary | `num == 1` | `false` | Unit is not prime |
+ * | Smallest prime | `num == 2` | `true` | Only even prime |
+ * | Smallest odd prime | `num == 3` | `true` | Base prime case |
+ * | Smallest even composite | `num == 4` | `false` | Divisible by 2 |
+ * | Boundary around 9 | `num == 9` | `false` | Divisible by 3 (odd composite) |
+ * | Boundary around 11 | `num == 11` | `true` | Prime (6k - 1 where k=2) |
+ * | Exclusive sieve upper bound | `[2, 12)` | 2, 3, 5, 7, 11 | Primes strictly less than 12 |
  */
 bool is_prime(int64_t num) {
     /*!
@@ -56,10 +72,11 @@ bool is_prime(int64_t num) {
 }  // namespace math
 
 /**
- * @brief Self-test implementations
+ * @brief Self-test implementations covering baseline and boundary cases.
  * @returns void
  */
 static void tests() {
+    // Baseline checks
     assert(math::is_prime(1) == false);
     assert(math::is_prime(2) == true);
     assert(math::is_prime(3) == true);
@@ -71,7 +88,40 @@ static void tests() {
     assert(math::is_prime(50) == false);
     assert(math::is_prime(115249) == true);
 
-    std::cout << "All tests have successfully passed!" << std::endl;
+    // Explicit boundary around 1 (smallest domain boundaries: 0, 1, 2)
+    assert(math::is_prime(-1) == false);
+    assert(math::is_prime(0) == false);
+    assert(math::is_prime(1) == false);
+    assert(math::is_prime(2) == true);
+
+    // Explicit boundary around 2 (1, 2, 3, 4)
+    assert(math::is_prime(1) == false);
+    assert(math::is_prime(2) == true);
+    assert(math::is_prime(3) == true);
+    assert(math::is_prime(4) == false);
+
+    // Explicit boundary around 9 (8, 9, 10)
+    assert(math::is_prime(8) == false);
+    assert(math::is_prime(9) == false);
+    assert(math::is_prime(10) == false);
+
+    // Explicit boundary around 11 (10, 11, 12)
+    assert(math::is_prime(10) == false);
+    assert(math::is_prime(11) == true);
+    assert(math::is_prime(12) == false);
+
+    // Sieve through 12 respecting exclusive upper-bound interface [2, 12)
+    // The prime numbers in this range are strictly: 2, 3, 5, 7, 11
+    std::vector<int64_t> primes_up_to_12;
+    for (int64_t n = 2; n < 12; ++n) {
+        if (math::is_prime(n)) {
+            primes_up_to_12.push_back(n);
+        }
+    }
+    std::vector<int64_t> expected_sieve = {2, 3, 5, 7, 11};
+    assert(primes_up_to_12 == expected_sieve);
+
+    std::cout << "All is_prime tests passed successfully (25 assertions)!" << std::endl;
 }
 
 /**
