@@ -1,0 +1,76 @@
+{
+  "task": "R22-T009",
+  "file_under_test": "dynamic_programming/longest_common_string.cpp",
+  "function_under_test": "longest_common_string_length",
+  "timestamp": "2026-11-16T01:47:07+0530",
+  "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+  "python_version": "3.15.0",
+  "compiler": "g++",
+  "compile_command": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-o",
+    "/Users/honeybunnyworksgmail.com/.gemini/antigravity/scratch/C-Plus-Plus/work/R22-T009/build/longest_common_string",
+    "/Users/honeybunnyworksgmail.com/.gemini/antigravity/scratch/C-Plus-Plus/dynamic_programming/longest_common_string.cpp"
+  ],
+  "compile_returncode": 0,
+  "test_stdout": "All tests have successfully passed (42 assertions)!\n",
+  "test_stderr": "",
+  "test_returncode": 0,
+  "test_count": 42,
+  "complexity_experiment": {
+    "complexity_claim": "O(N * M) time and O(N * M) auxiliary space where N=string_a.size() and M=string_b.size()",
+    "method": "5 repetitions per size with fixed seed (42), timer strictly isolating algorithm execution from I/O and setup",
+    "results": {
+      "size_50x50": {
+        "repetitions": 5,
+        "median_microseconds": 10.62,
+        "range_microseconds": [
+          10.29,
+          15.83
+        ],
+        "raw_samples": [
+          15.83,
+          11.25,
+          10.29,
+          10.62,
+          10.62
+        ]
+      },
+      "size_150x150": {
+        "repetitions": 5,
+        "median_microseconds": 74.08,
+        "range_microseconds": [
+          73.17,
+          101.92
+        ],
+        "raw_samples": [
+          101.92,
+          82.83,
+          73.62,
+          73.17,
+          74.08
+        ]
+      },
+      "size_300x300": {
+        "repetitions": 5,
+        "median_microseconds": 273.08,
+        "range_microseconds": [
+          268.29,
+          369.0
+        ],
+        "raw_samples": [
+          369.0,
+          275.58,
+          268.33,
+          268.29,
+          273.08
+        ]
+      }
+    }
+  },
+  "outcome": "PASS"
+}
