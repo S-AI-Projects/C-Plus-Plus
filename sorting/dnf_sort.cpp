@@ -31,9 +31,13 @@ namespace dnf_sort {
 /**
  * @brief The main function implements DNF sort
  * @tparam T type of array
- * @param a array to be sorted,
- * @param arr_size size of array
- * @returns void
+ * @param in_arr vector array to be sorted
+ * @returns sorted vector
+ * @note Let n be the number of elements. Every loop iteration either advances
+ *       the middle pointer or lowers the high pointer, so the loop runs exactly
+ *       n iterations: O(n) time for any input (best and worst case equal),
+ *       O(1) extra space (excluding the output vector). This follows from the
+ *       code; timings in the PR are observations that agree with it, not a proof.
  */
 template <typename T>
 std::vector<T> dnfSort(const std::vector<T> &in_arr) {
@@ -99,6 +103,13 @@ static void test() {
     std::cout << "Test 4... ";
     std::vector<uint64_t> arr4 = sorting::dnf_sort::dnfSort(array4);
     assert(std::is_sorted(std::begin(arr4), std::end(arr4)));
+    std::cout << "passed" << std::endl;
+
+    // regression: repeated values, literal expected output (R22-T039)
+    std::vector<uint64_t> repeated = {2, 2, 1};
+    std::cout << "Test 5 (repeated)... ";
+    std::vector<uint64_t> arr5 = sorting::dnf_sort::dnfSort(repeated);
+    assert((arr5 == std::vector<uint64_t>{1, 2, 2}));
     std::cout << "passed" << std::endl;
 }
 

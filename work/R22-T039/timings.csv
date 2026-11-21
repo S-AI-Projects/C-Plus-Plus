@@ -1,0 +1,6 @@
+size_n,reps,median_ms,min_ms,max_ms
+1000000,5,9.682,9.646,10.331
+2000000,5,19.390,19.346,19.904
+4000000,5,38.788,38.337,39.478
+# median(2000000) / median(1000000) = 2.00  (linear growth predicts about 2.0)
+# median(4000000) / median(2000000) = 2.00  (linear growth predicts about 2.0)
