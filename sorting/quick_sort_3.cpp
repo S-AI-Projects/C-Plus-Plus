@@ -51,6 +51,26 @@ namespace {  // using un-named namespace here to prevent partition function
  * @param [in] high upper limit of window to partition
  * @param [out] i updated lower limit of partition
  * @param [out] j updated upper limit of partition
+ *
+ * @par Worked example
+ * Input a = {3, 1, 2}, low = 0, high = 2, so pivot = a[high] = 2.
+ *
+ * | step | mid | low | high | a     | what happens                              |
+ * |------|-----|-----|------|-------|-------------------------------------------|
+ * | 0    | 0   | 0   | 2    | 3 1 2 | start                                     |
+ * | 1    | 0   | 0   | 1    | 2 1 3 | 3 > pivot: swap to the right end, high--  |
+ * | 2    | 1   | 0   | 1    | 2 1 3 | 2 == pivot: mid++                         |
+ * | 3    | 2   | 1   | 1    | 1 2 3 | 1 < pivot: swap to the left end, low++    |
+ *
+ * The decisive step is step 1: an element above the pivot is swapped to the
+ * right end and mid does not advance, because the element swapped in has not
+ * been examined yet. One call partitions only; quicksort repeats it.
+ *
+ * Displayed output (executed by quick_sort_3_partition3_test.cpp):
+ * @code{.txt}
+ * partition3({3, 1, 2}) -> {1, 2, 3}, i=0, j=2
+ * partition3({2, 2, 1}) -> {1, 2, 2}, i=-1, j=1
+ * @endcode
  */
 template <typename T>
 void partition3(std::vector<T> *arr, int32_t low, int32_t high, int32_t *i,

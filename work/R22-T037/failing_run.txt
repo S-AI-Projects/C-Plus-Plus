@@ -1,0 +1,12 @@
+g++: Apple clang version 21.0.0 (clang-2100.1.1.101)
+cmake: unavailable ([Errno 1] Operation not permitted: 'cmake')
+python: 3.9.6
+
+Preconditions (source lines, quick_sort_3.cpp before docs were added):
+  partition3 signature lines 55-57; shortcut high-low<=1 line 59;
+  pivot = arr[high] line 69; i = low-1 line 81; j = mid line 82
+Command: g++ -std=c++17 -Wall -Wextra -Wno-register -Werror=vla -o /Users/prishi/C-Plus-Plus/work/R22-T037/partition3_test.bin /Users/prishi/C-Plus-Plus/sorting/quick_sort_3_partition3_test.cpp
+partition3({3, 1, 2}) -> {1, 2, 3}, i=0, j=2
+FAIL partition3({3, 1, 2}) -> {1, 2, 3}, i=0, j=2: expected {1, 2, 3}, i=0, j=3
+
+FAILED: test binary exited with 1
