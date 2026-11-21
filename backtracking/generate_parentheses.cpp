@@ -66,6 +66,11 @@ void generate_parentheses::makeStrings(std::string str, int n,
  *
  * @param n number of pairs of parentheses
  * @return all well-formed pattern of parentheses
+ * @note Supported domain: n >= 1 (number of pairs of parentheses).
+ *       Inputs n <= 0 are unspecified by the problem definition and cause
+ *       unbounded recursion in makeStrings. The method calls res.clear()
+ *       on entry so the instance can be safely reused. Explores ')'
+ *       before '(', producing reverse-lexicographical ordering.
  */
 std::vector<std::string> generate_parentheses::generate(int n) {
     backtracking::generate_parentheses::res.clear();

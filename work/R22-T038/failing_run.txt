@@ -1,0 +1,17 @@
+g++: Apple clang version 21.0.0 (clang-2100.1.1.101)
+cmake: unavailable ([Errno 1] Operation not permitted: 'cmake')
+python: 3.9.6
+
+Preconditions and source lines (backtracking/generate_parentheses.cpp):
+  class generate_parentheses: line 26
+  generate(n) entry & res.clear(): lines 70-71
+  makeStrings pruning (closed > open): line 47
+  makeStrings pruning (str.length() == 2*n && closed != open): line 50
+  makeStrings base case (str.length() == 2*n): line 55
+  makeStrings recursion ')' before '(': lines 60-61
+  supported domain: n >= 1 (n <= 0 unspecified, causes unbounded recursion)
+Command: g++ -std=c++17 -Wall -Wextra -Wno-register -Werror=vla -o /Users/prishi/C-Plus-Plus/work/R22-T038/generate_parentheses_test.bin /Users/prishi/C-Plus-Plus/backtracking/generate_parentheses_failure_test.cpp
+ok   n=1 smallest: expected {"()"}, actual {"()"}
+FAIL n=2 neighbor: expected {"(())"}, actual {"()()", "(())"}
+
+FAILED: test binary exited with 1
