@@ -51,6 +51,11 @@ void cll::insert_front(int new_data) {
 }
 
 /* List insert a new value at head in list */
+/**
+ * @note Each successful insert increases the stored size by exactly one;
+ *       get_size() must equal the number of elements in the list
+ *       (checked by cll_test.cpp, "one-element size").
+ */
 void cll::insert_tail(int new_data) {
     node *newNode;
     newNode = new node;
