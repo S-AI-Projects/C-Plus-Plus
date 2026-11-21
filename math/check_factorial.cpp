@@ -24,6 +24,9 @@ namespace math {
  * @param n number to be checked.
  * @return true if number is a factorial returns true
  * @return false if number is not a factorial
+ * @note Verified domain: n == 0 returns false; n >= 1 is tested up to 12!.
+ *       The running quotient is kept in a separate local `remaining` so the
+ *       parameter `n` is never modified.
  */
 bool is_factorial(uint64_t n) {
     if (n <= 0) {  // factorial numbers are only ever positive Integers
@@ -33,11 +36,13 @@ bool is_factorial(uint64_t n) {
     /*!
      * this loop is basically a reverse factorial calculation, where instead
      * of multiplying we are dividing. We start at i = 2 since i = 1 has
-     * no impact division wise
+     * no impact division wise.
+     * `remaining` holds the quotient left after dividing out 1, 2, 3, ...
      */
+    uint64_t remaining = n;  // quotient left after dividing out 1, 2, 3, ...
     int i = 2;
-    while (n % i == 0) {
-        n = n / i;
+    while (remaining % i == 0) {
+        remaining = remaining / i;
         i++;
     }
 
@@ -45,7 +50,7 @@ bool is_factorial(uint64_t n) {
      * if n was the sum of a factorial then it should be divided until it
      * becomes 1
      */
-    return (n == 1);
+    return (remaining == 1);
 }
 }  // namespace math
 

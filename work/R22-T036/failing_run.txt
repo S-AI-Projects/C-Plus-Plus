@@ -1,0 +1,13 @@
+g++: Apple clang version 21.0.0 (clang-2100.1.1.101)
+cmake: unavailable ([Errno 1] Operation not permitted: 'cmake')
+python: 3.9.6
+
+Preconditions (source lines):
+  math::is_factorial signature: math/check_factorial.cpp line 28
+  guard (n<=0 → false):         math/check_factorial.cpp line 29
+  loop (while remaining % i):   math/check_factorial.cpp line 39
+  domain test (0 → false):      math/check_factorial.cpp line 59 (tests())
+
+ok   math::is_factorial(1): expected 1, actual 1
+FAIL math::is_factorial(2): expected 0, actual 1
+
