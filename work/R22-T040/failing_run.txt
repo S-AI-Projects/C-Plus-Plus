@@ -1,0 +1,8 @@
+Mutant: insert_tail `total++;` (cll.cpp:70) -> `total += 2;`
+
+ok   empty size: expected 0, actual 0
+List is empty !
+ok   empty find_item: expected 0, actual 0
+FAIL one-element size: expected 1, actual 2
+
+exit code: 1

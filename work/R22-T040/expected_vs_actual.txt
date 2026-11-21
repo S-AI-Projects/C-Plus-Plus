@@ -1,0 +1,11 @@
+ok   empty size: expected 0, actual 0
+List is empty !
+ok   empty find_item: expected 0, actual 0
+ok   one-element size: expected 1, actual 1
+ok   ordinary size: expected 3, actual 3
+ok   ordinary find_item present: expected 1, actual 1
+ok   ordinary find_item absent: expected 0, actual 0
+ok   ordinary head value: expected 1, actual 1
+ok   after front insert size: expected 4, actual 4
+ok   after front insert head value: expected 0, actual 0
+CASES_RUN=9
