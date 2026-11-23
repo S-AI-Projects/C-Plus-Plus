@@ -23,6 +23,18 @@
  * iterations, the more exact the result will be (1 or 2).
  * @param x value to calculate
  * @return the inverse square root
+ *
+ * @details Complexity: O(1) per call. The work does not depend on the value
+ * of `x`: one multiply for `x2`, one shift and one subtraction for the
+ * initial guess, then 4 multiplies and 1 subtraction per Newton iteration
+ * (`iterations` is 1 or 2). Computing N values therefore takes O(N) time,
+ * where N is the number of calls. This is a count of operations, not a
+ * timing claim; work/R22-T029 has a timing experiment that is consistent
+ * with it.
+ *
+ * Supported input: positive, finite, normal values. Observed maximum
+ * relative error against `1 / std::sqrt(x)` for x in [1e-3, 1e3]:
+ * about 0.175% with 1 iteration and 4.6e-6 with 2 iterations.
  */
 template <typename T = double, char iterations = 2>
 inline T Fast_InvSqrt(T x) {
@@ -78,6 +90,12 @@ static void test() {
     assert(std::fabs(Fast_InvSqrt<double, 1>(36.0f) - 0.166667f) < epsilon);
     assert(std::fabs(Fast_InvSqrt(12.0f) - 0.288423) < epsilon);
     assert(std::fabs(Fast_InvSqrt<double>(5.0f) - 0.447141) < epsilon);
+
+    /* Neighbouring input worked out by hand: 1 / sqrt(25) = 0.2, checked
+     * against the relative error bounds for 1 and 2 iterations */
+    assert(std::fabs(Fast_InvSqrt<float, 1>(25.0f) - 0.2f) < 0.2f * 1.8e-3f);
+    assert(std::fabs(Fast_InvSqrt<double, 2>(25.0) - 0.2) < 0.2 * 5e-6);
+    std::cerr << "[Fast_InvSqrt] 10 checks passed" << std::endl;
 }
 
 /**

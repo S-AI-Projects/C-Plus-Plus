@@ -1,0 +1,10 @@
+$ cmake -S . -B build-R22-T029 -DCMAKE_BUILD_TYPE=Debug -DUSE_OPENMP=OFF
+$ cmake --build build-R22-T029 --target inv_sqrt
+$ build-R22-T029/math/inv_sqrt
+[Fast_InvSqrt] 10 checks passed
+
+$ /usr/bin/c++ -std=c++17 -O2 -fno-strict-aliasing -Wall -Wextra -Wno-return-type work/R22-T029/bench.cpp
+[bench] N=100000 ns/call median 1.345 range 1.310-1.432
+[bench] N=1000000 ns/call median 1.513 range 1.479-1.820
+[bench] N=10000000 ns/call median 2.051 range 1.984-3.068
+[bench] correctness failures: 0
