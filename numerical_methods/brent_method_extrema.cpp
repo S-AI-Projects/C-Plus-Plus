@@ -136,6 +136,23 @@ double get_minima(const std::function<double(double)> &f, double lim_a,
 }
 
 /**
+ * @brief Verify the documented absent-search case for a degenerate interval.
+ * When the endpoints differ by at most EPSILON, get_minima returns lim_a
+ * without evaluating the objective; a later ordinary minimization still runs.
+ */
+void test_degenerate_interval() {
+    int evaluations = 0;
+    const std::function<double(double)> objective = [&evaluations](double x) {
+        evaluations++;
+        return x * x;
+    };
+    const double result = get_minima(objective, 2.0, 2.0);
+    assert(result == 2.0);
+    assert(evaluations == 0);
+    std::cout << "Degenerate interval returned 2 without evaluations\n";
+}
+
+/**
  * @brief Test function to find root for the function
  * \f$f(x)= (x-2)^2\f$
  * in the interval \f$[1,5]\f$
@@ -208,6 +225,7 @@ int main() {
     std::cout << "Computations performed with machine epsilon: " << EPSILON
               << "\n";
 
+    test_degenerate_interval();
     test1();
     test2();
     test3();

@@ -1,0 +1,38 @@
+{
+  "task": "R22-T018",
+  "student": "Mohit Sharma",
+  "branch": "student/e26b07f0869/R22-T018",
+  "failure_path_source": "numerical_methods/brent_method_extrema.cpp:41-45; endpoint distance <= EPSILON returns lim_a before calling f.",
+  "input": {
+    "lim_a": 2.0,
+    "lim_b": 2.0
+  },
+  "expected": {
+    "result": 2.0,
+    "objective_evaluations": 0,
+    "subsequent_valid_test": "passes for minimum x=2"
+  },
+  "actual": {
+    "result": 2.0,
+    "objective_evaluations": 0,
+    "subsequent_valid_test": "passes"
+  },
+  "compile_command": [
+    "c++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wno-register",
+    "-Werror=vla",
+    "/Users/aryansingh/Documents/Codex/2026-11-23/mohit-cpp/numerical_methods/brent_method_extrema.cpp",
+    "-o",
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t018-gn9o6fl1/brent_method_extrema"
+  ],
+  "run_command": [
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t018-gn9o6fl1/brent_method_extrema"
+  ],
+  "compiler_version": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+  "python_version": "Python 3.15.2",
+  "compile_exit_code": 0,
+  "run_exit_code": 0
+}
