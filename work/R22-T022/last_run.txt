@@ -1,0 +1,13 @@
+$ cmake -S . -B build-R22-T022 -DCMAKE_BUILD_TYPE=Debug -DUSE_OPENMP=OFF
+$ cmake --build build-R22-T022 --target swap_sort
+$ build-R22-T022/sorting/swap_sort
+[minSwaps] empty, n=0: expected 0 actual 0
+[minSwaps] single value, n=1: expected 0 actual 0
+[minSwaps] already ordered [1, 2, 3]: expected 0 actual 0
+[minSwaps] [3, 1, 2] -> one 3-cycle: expected 2 actual 2
+[minSwaps] reversed [3, 2, 1] -> one 2-cycle: expected 1 actual 1
+[minSwaps] program example: expected 3 actual 3
+[minSwaps] prefix n=2 of [3, 1, 2]: expected 1 actual 1
+[minSwaps] repeated values [2, 2, 2]: expected 0 actual 0
+[minSwaps] repeated values [2, 2, 1] (minimum is 1): expected 1 actual 2
+swap_sort: /home/claude/C-Plus-Plus/sorting/swap_sort.cpp:93: void check(const char*, std::vector<int>, int, int): Assertion `actual == expected' failed.
