@@ -1,0 +1,41 @@
+{
+  "task": "R22-T015",
+  "student": "Mohit Sharma",
+  "branch": "student/e26b07f0869/R22-T015",
+  "external_state": "The old file-scope start pointer was moved into each double_linked_list instance.",
+  "expected": {
+    "three_node_values": [
+      10,
+      20,
+      30
+    ],
+    "three_node_prev_next_links": "consistent in both directions",
+    "singleton": {
+      "value": 7,
+      "prev": null,
+      "next": null
+    },
+    "second_instance_isolated": true,
+    "fresh_repeat_matches": true
+  },
+  "actual": "All native assertions passed; runner output confirms 3-node links, singleton, and isolated repeat.",
+  "compile_command": [
+    "c++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wno-register",
+    "-Werror=vla",
+    "/Users/aryansingh/Documents/Codex/2026-11-23/mohit-cpp/data_structures/doubly_linked_list.cpp",
+    "-o",
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t015-9193v2_m/doubly_linked_list"
+  ],
+  "run_command": [
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t015-9193v2_m/doubly_linked_list",
+    "(stdin: 0)"
+  ],
+  "compiler_version": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+  "python_version": "Python 3.15.2",
+  "compile_exit_code": 0,
+  "run_exit_code": 0
+}
