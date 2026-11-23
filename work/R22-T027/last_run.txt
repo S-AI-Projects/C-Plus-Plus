@@ -1,0 +1,4 @@
+$ cmake -S . -B build-R22-T027 -DCMAKE_BUILD_TYPE=Debug -DUSE_OPENMP=OFF
+$ cmake --build build-R22-T027 --target binary_addition
+$ build-R22-T027/greedy_algorithms/binary_addition
+binary_addition: /home/claude/C-Plus-Plus/greedy_algorithms/binary_addition.cpp:110: void tests(): Assertion `binaryAddition.addBinary("1010", "1101") == "10111"' failed.

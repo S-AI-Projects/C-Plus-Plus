@@ -12,12 +12,32 @@
  * the function validates the input to ensure that only valid binary strings
  * (containing only '0' and '1') are processed. If invalid input is detected,
  * it returns an empty string.
+ *
+ * @par Worked example
+ * @code
+ * greedy_algorithms::BinaryAddition adder;
+ * std::cout << adder.addBinary("1011", "110");  // prints 10001
+ * @endcode
+ * That is 11 + 6 = 17. The bits are read right to left (`i` counts from the
+ * last character); `b` is shorter, so its missing bit is 0:
+ *
+ * | i | bitA | bitB | carry in | sum | bit written | carry out | result so far |
+ * |---|------|------|----------|-----|-------------|-----------|---------------|
+ * | 0 | 1    | 0    | 0        | 1   | 1           | 0         | "1"           |
+ * | 1 | 1    | 1    | 0        | 2   | 0           | 1         | "10"          |
+ * | 2 | 0    | 1    | 1        | 2   | 0           | 1         | "100"         |
+ * | 3 | 1    | 0    | 1        | 2   | 0           | 1         | "1000"        |
+ *
+ * The decisive step is after the loop: the carry is still 1, so `if (carry)`
+ * appends one more '1', giving "10001" once reversed. Without that step the
+ * answer would be one bit short ("0001").
  * @author [Muhammad Junaid Khalid](https://github.com/mjk22071998)
  */
 
 #include <algorithm>  /// for reverse function
 #include <cassert>    /// for tests
 #include <iostream>   /// for input and outputs
+#include <sstream>    /// for std::ostringstream
 #include <string>     /// for string class
 
 /**
@@ -110,10 +130,48 @@ static void tests() {
 }
 
 /**
+ * @brief Run the documented worked example and check its printed output,
+ * then check each traced intermediate state through the public API
+ * @returns void
+ */
+static void doc_example_tests() {
+    int count = 0;
+
+    // the exact code from the file's @code block, with std::cout captured
+    std::ostringstream printed;
+    std::streambuf* old_buf = std::cout.rdbuf(printed.rdbuf());
+    greedy_algorithms::BinaryAddition adder;
+    std::cout << adder.addBinary("1011", "110");  // prints 10001
+    std::cout.rdbuf(old_buf);
+    std::cerr << "[BinaryAddition] doc example printed " << printed.str()
+              << std::endl;
+    assert(printed.str() == "10001");
+    ++count;
+
+    // traced states: after reading the last k bits, the sum of those bits
+    // gives the "result so far" (reversed back) plus the carry as a leading 1
+    assert(adder.addBinary("1", "0") == "1");        // k = 1: bit 1, carry 0
+    assert(adder.addBinary("11", "10") == "101");    // k = 2: bits 01, carry 1
+    assert(adder.addBinary("011", "110") == "1001");  // k = 3: 001, carry 1
+    assert(adder.addBinary("1011", "0110") == "10001");  // k = 4: final carry
+    count += 4;
+
+    // source anchors and a neighbouring input worked out by hand
+    assert(adder.addBinary("1010", "1101") == "10111");
+    assert(adder.addBinary("1111", "1111") == "11110");
+    assert(adder.addBinary("101", "11") == "1000");
+    assert(adder.addBinary("101", "111") == "1100");  // neighbour: 5 + 7 = 12
+    count += 4;
+
+    std::cerr << "[BinaryAddition] " << count << " checks passed" << std::endl;
+}
+
+/**
  * @brief main function
  * @returns 0 on successful exit
  */
 int main() {
-    tests(); /// To execute tests
+    tests();              /// To execute tests
+    doc_example_tests();  /// To execute the documented example
     return 0;
 }
