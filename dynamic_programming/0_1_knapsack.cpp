@@ -78,6 +78,9 @@ int maxKnapsackValue(const int capacity, const std::array<int, n> &weight,
             } else {
                 // as the weight of the current item is greater than the allowed weight, so
                 // maxProfit will be profit obtained by excluding the current item.
+                // Protected condition: an item that does not fit must keep the
+                // best value of the earlier items (not reset it); see the
+                // "item heavier than capacity" regression in test().
                 maxValue[i][j] = maxValue[i - 1][j];
             }
         }
@@ -117,6 +120,34 @@ static void test() {
     assert(max_value2 == expected_max_value2);
     std::cout << "Maximum Knapsack value with " << n2 << " items is "
               << max_value2 << std::endl;
+
+    // Test 3: item heavier than capacity (neighbour of test 1). Item 4
+    // (weight 60) cannot fit in capacity 50, so the answer must stay 220
+    // (items 2 and 3: weight 20 + 30 = 50, value 100 + 120).
+    const int n3 = 4;
+    const std::array<int, n3> weight3 = {10, 20, 30, 60};
+    const std::array<int, n3> value3 = {60, 100, 120, 500};
+    const std::array<int, n3> weight3_copy = weight3, value3_copy = value3;
+    const int max_value3 = dynamic_programming::knapsack::maxKnapsackValue(
+        50, weight3, value3);
+    const int expected_max_value3 = 220;
+    assert(max_value3 == expected_max_value3);  // item heavier than capacity
+    // same result for a fresh equivalent input, and the inputs are unchanged
+    const int max_value3_again =
+        dynamic_programming::knapsack::maxKnapsackValue(50, weight3_copy,
+                                                        value3_copy);
+    assert(max_value3_again == expected_max_value3);
+    assert(weight3 == weight3_copy && value3 == value3_copy);
+
+    // Test 4: smallest input for the same condition. Capacity 1 holds only
+    // item 1 (weight 1, value 10); item 2 (weight 2) does not fit.
+    const std::array<int, 2> weight4 = {1, 2};
+    const std::array<int, 2> value4 = {10, 20};
+    const int max_value4 =
+        dynamic_programming::knapsack::maxKnapsackValue(1, weight4, value4);
+    const int expected_max_value4 = 10;
+    assert(max_value4 == expected_max_value4);  // smallest heavy-item case
+    std::cerr << "[maxKnapsackValue] 6 checks passed" << std::endl;
 }
 
 /**

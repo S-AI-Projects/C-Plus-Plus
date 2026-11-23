@@ -1,0 +1,7 @@
+$ cmake -S . -B build-R22-T030 -DCMAKE_BUILD_TYPE=Debug -DUSE_OPENMP=OFF
+$ cmake --build build-R22-T030 --target 0_1_knapsack
+$ build-R22-T030/dynamic_programming/0_1_knapsack
+[maxKnapsackValue] 6 checks passed
+
+mutant (too-heavy item resets value to 0): exit -6
+mutant: /tmp/tmph7pa4s42/mutant.cpp:134: void test(): Assertion `max_value3 == expected_max_value3' failed.
