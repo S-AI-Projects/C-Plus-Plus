@@ -1,0 +1,4 @@
+$ cmake -S . -B build-R22-T026 -DCMAKE_BUILD_TYPE=Debug -DUSE_OPENMP=OFF
+$ cmake --build build-R22-T026 --target gaussian_elimination
+$ build-R22-T026/numerical_methods/gaussian_elimination
+gaussian_elimination: /home/claude/C-Plus-Plus/numerical_methods/gaussian_elimination.cpp:54: void test(): Assertion `a1[0] == 0 && a1[1] == -1.5 && a1[2] == -1.5' failed.
