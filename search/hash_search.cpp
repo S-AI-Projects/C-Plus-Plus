@@ -16,6 +16,8 @@
  * fashion
  */
 #include <cstdlib>
+#include <cassert>
+#include <climits>
 #include <iostream>
 
 #define MAX 6      ///< Determines how much data
@@ -37,10 +39,11 @@ node hashtab[HASHMAX];  ///< array of nodes
 // int counter = 1;
 
 /**
- * Mode of hash detection :
- * Division method
- * \param [in] key to hash
- * \returns hash value for `key`
+ * Division-method remainder hash. `h` accepts any int and follows C++ signed
+ * remainder semantics; for negative keys the result is negative and must not
+ * be used as an index into `hashtab`. Nonnegative keys map to [0, HASHMAX).
+ * \param [in] key integer key to hash
+ * \returns `key % HASHMAX` (possibly negative for a negative key)
  */
 int h(int key) { return key % HASHMAX; }
 
@@ -97,6 +100,17 @@ int hash_search(int key, int* counter) {  // Hash lookup function
 
 /** main function */
 int main() {
+    // h's public formula is defined for every int; negative remainders are
+    // observable, though only nonnegative inputs are safe hash-table indices.
+    const int boundary_keys[] = {0, 10, -1, INT_MIN};
+    const int expected_hashes[] = {0, 0, -1, INT_MIN % HASHMAX};
+    for (int test_index = 0; test_index < 4; test_index++) {
+        const int actual = h(boundary_keys[test_index]);
+        std::cout << "H_CASE " << boundary_keys[test_index] << " "
+                  << expected_hashes[test_index] << " " << actual << '\n';
+        assert(actual == expected_hashes[test_index]);
+    }
+
     link p;
     int key = 0, index, i, counter;  // Key is the value to be found
     index = 0;
