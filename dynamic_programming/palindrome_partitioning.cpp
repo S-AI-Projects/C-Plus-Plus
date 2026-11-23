@@ -20,6 +20,8 @@
 #include <cassert>    // for std::assert
 #include <climits>    // for INT_MAX
 #include <iostream>   // for io operations
+#include <string>     // for std::string
+#include <utility>    // for std::pair
 #include <vector>     // for std::vector
 
 /**
@@ -38,12 +40,17 @@ namespace palindrome_partitioning {
 
 /**
  * Function implementing palindrome partitioning algorithm using lookup table
- * method.
+ * method. The string is used verbatim (case-sensitive, with no normalization);
+ * an empty or already-palindromic string requires zero cuts.
  * @param str input string
- * @returns minimum number of partitions
+ * @returns minimum number of cuts needed to partition str into palindromes
  */
 int pal_part(const std::string &str) {
     int n = str.size();
+
+    if (n == 0) {
+        return 0;
+    }
 
     // creating lookup table for minimum number of cuts
     std::vector<std::vector<int> > cuts(n, std::vector<int>(n, 0));
@@ -96,29 +103,19 @@ int pal_part(const std::string &str) {
  * @return void
  */
 static void test() {
-    // custom input vector
-    std::vector<std::string> custom_input{"nitik", "ababbbabbababa", "abdc"};
+    const std::vector<std::pair<std::string, int>> cases = {
+        {"", 0}, {"a", 0}, {"aba", 0}, {"ab", 1}, {"abba", 0},
+        {"nitik", 2}, {"ababbbabbababa", 3}, {"abdc", 3}};
 
-    // calculated output vector by pal_part Function
-    std::vector<int> calculated_output(3);
-
-    for (int i = 0; i < 3; i++) {
-        calculated_output[i] =
+    for (const auto &test_case : cases) {
+        const int actual =
             dynamic_programming::palindrome_partitioning::pal_part(
-                custom_input[i]);
+                test_case.first);
+        std::cout << "{\"input\":\"" << test_case.first
+                  << "\",\"expected\":" << test_case.second
+                  << ",\"actual\":" << actual << "}\n";
+        assert(test_case.second == actual);
     }
-
-    // expected output vector
-    std::vector<int> expected_output{2, 3, 3};
-
-    // Testing implementation via assert function
-    // It will throw error if any of the expected test fails
-    // Else it will give nothing
-    for (int i = 0; i < 3; i++) {
-        assert(expected_output[i] == calculated_output[i]);
-    }
-
-    std::cout << "All tests passed successfully!\n";
 }
 
 /**
