@@ -49,6 +49,9 @@ namespace math {
  * @param c constant
  * @return Array containing the roots of quadratic equation, incl. complex
  * root.
+ * @note For example, (x - 1)(x - 2) has coefficients (1, -3, 2), so the
+ * returned roots are 1 and 2. Coefficients are used as supplied; a must be
+ * nonzero and the function does not normalize them.
  */
 std::array<std::complex<long double>, 2> quadraticEquation(long double a,
                                                            long double b,
@@ -142,6 +145,11 @@ static void test() {
         std::complex<long double>{-2, -1}, std::complex<long double>{-2, 1}};
     assert(math::quadraticEquation(1, 4, 5) == complexCase);
 
+    // Neighboring supported equation: x^2 - 3x + 2 = 0 has roots 1 and 2.
+    const std::array<std::complex<long double>, 2> neighboringCase{
+        std::complex<long double>{1, 0}, std::complex<long double>{2, 0}};
+    assert(math::quadraticEquation(1, -3, 2) == neighboringCase);
+
     // Values are real.
     std::cout << "Input: \n"
                  "a=1 \n"
@@ -177,6 +185,34 @@ static void test() {
     } catch (std::invalid_argument& e) {
         std::cout << "Exception thrown successfully \n";
     }
+
+    // Independent oracle: solve via the complex square root of the
+    // discriminant, then compare a bounded coefficient grid against the
+    // implementation. This formulation does not call quadraticEquation.
+    int reference_cases = 0;
+    for (int a = -2; a <= 2; a++) {
+        if (a == 0) {
+            continue;
+        }
+        for (int b = -2; b <= 2; b++) {
+            for (int c = -2; c <= 2; c++) {
+                const long double discriminant =
+                    static_cast<long double>(b * b - 4 * a * c);
+                const std::complex<long double> root =
+                    std::sqrt(std::complex<long double>{discriminant, 0});
+                const std::array<std::complex<long double>, 2> expected{
+                    (static_cast<long double>(-b) - root) /
+                        (2.0L * static_cast<long double>(a)),
+                    (static_cast<long double>(-b) + root) /
+                        (2.0L * static_cast<long double>(a))};
+                const auto actual = math::quadraticEquation(a, b, c);
+                assert(std::abs(actual[0] - expected[0]) < 1e-12L);
+                assert(std::abs(actual[1] - expected[1]) < 1e-12L);
+                reference_cases++;
+            }
+        }
+    }
+    std::cout << "Reference cases passed: " << reference_cases << '\n';
 }
 
 /**
