@@ -1,0 +1,69 @@
+{
+  "task": "R22-T019",
+  "student": "Mohit Sharma",
+  "branch": "student/e26b07f0869/R22-T019",
+  "complexity_claim": "m = end - start + 1; the partition loop compares m-1 elements, therefore one call is \u0398(m). Full quicksort worst case remains O(n^2).",
+  "measurements": [
+    {
+      "size": 128,
+      "repetitions": 5,
+      "seed": 23063,
+      "median_ns": 2333,
+      "min_ns": 2125,
+      "max_ns": 2583
+    },
+    {
+      "size": 512,
+      "repetitions": 5,
+      "seed": 23063,
+      "median_ns": 8958,
+      "min_ns": 4292,
+      "max_ns": 10041
+    },
+    {
+      "size": 2048,
+      "repetitions": 5,
+      "seed": 23063,
+      "median_ns": 27792,
+      "min_ns": 20375,
+      "max_ns": 33541
+    }
+  ],
+  "timing_scope": "Only the partition call; input generation, copying, compilation, process startup, I/O, sorting, and assertions are outside the timed interval.",
+  "native_compile_command": [
+    "c++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wno-register",
+    "-Werror=vla",
+    "/Users/aryansingh/Documents/Codex/2026-11-23/mohit-cpp/sorting/quick_sort_iterative.cpp",
+    "-o",
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t019-1jx1sp34/quick_sort_native"
+  ],
+  "native_run_command": [
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t019-1jx1sp34/quick_sort_native"
+  ],
+  "benchmark_compile_command": [
+    "c++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wno-register",
+    "-Werror=vla",
+    "-I",
+    "/Users/aryansingh/Documents/Codex/2026-11-23/mohit-cpp",
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t019-1jx1sp34/partition_benchmark.cpp",
+    "-o",
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t019-1jx1sp34/partition_benchmark"
+  ],
+  "benchmark_run_command": [
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t019-1jx1sp34/partition_benchmark"
+  ],
+  "compiler_version": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+  "python_version": "Python 3.15.2",
+  "native_compile_exit_code": 0,
+  "native_run_exit_code": 0,
+  "benchmark_compile_exit_code": 0,
+  "benchmark_run_exit_code": 0
+}

@@ -25,6 +25,9 @@ namespace sorting {
 /**
  * @brief The partition function sorts the array from
  * start to end and uses the last element as the pivot.
+ * @details For a range of m = end - start + 1 elements, partition performs
+ * exactly m - 1 pivot comparisons and O(m) moves, so its work is Θ(m). This
+ * statement is about one partition call; quicksort still has O(n^2) worst case.
  * @param arr the array to be sorted
  * @param start starting index
  * @param end ending index
@@ -93,6 +96,12 @@ void iterativeQuickSort(std::vector<int> &arr)
  */
 void tests()
 {
+    std::vector<int> partition_case = {3, 1, 2};
+    const int pivot_index = sorting::partition(partition_case, 0, 2);
+    assert(pivot_index == 1);
+    assert((partition_case == std::vector<int>{1, 2, 3}));
+    std::cout << "Partition fixture passed\n";
+
     //TEST 1 - Positive numbers
     std::vector<int> case1={100,534,1000000,553,10,61,2000,238,2756,9,12,56,30};
     std::cout<<"TEST 1\n";
