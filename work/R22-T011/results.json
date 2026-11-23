@@ -1,0 +1,67 @@
+{
+  "task": "R22-T011",
+  "student": "Mohit Sharma",
+  "branch": "student/e26b07f0869/R22-T011",
+  "contract": "String is compared verbatim and case-sensitively; no normalization; empty input has zero cuts.",
+  "cases": [
+    {
+      "input": "",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "input": "a",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "input": "aba",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "input": "ab",
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "input": "abba",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "input": "nitik",
+      "expected": 2,
+      "actual": 2
+    },
+    {
+      "input": "ababbbabbababa",
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "input": "abdc",
+      "expected": 3,
+      "actual": 3
+    }
+  ],
+  "compile_command": [
+    "c++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wno-register",
+    "-Werror=vla",
+    "/Users/aryansingh/Documents/Codex/2026-11-23/mohit-cpp/dynamic_programming/palindrome_partitioning.cpp",
+    "-o",
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t011-20k209xm/palindrome_partitioning"
+  ],
+  "run_command": [
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t011-20k209xm/palindrome_partitioning"
+  ],
+  "compiler_version": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+  "python_version": "Python 3.15.2",
+  "compile_exit_code": 0,
+  "run_exit_code": 0,
+  "stderr": ""
+}
