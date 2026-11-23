@@ -1,0 +1,4 @@
+$ cmake -S . -B build-R22-T028 -DCMAKE_BUILD_TYPE=Debug -DUSE_OPENMP=OFF
+$ cmake --build build-R22-T028 --target hopcroft_karp
+$ build-R22-T028/graph/hopcroft_karp
+hopcroft_karp: /home/claude/C-Plus-Plus/graph/hopcroft_karp.cpp:268: void tests(): Assertion `res1 == expected_res1' failed.

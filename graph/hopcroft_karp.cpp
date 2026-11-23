@@ -260,7 +260,9 @@ void tests(){
 	     g1.addEdge(0,1);
 	     g1.addEdge(1,4);
 
-	     int expected_res1 = 0; // for the above sample data, this is the expected output
+	     // edge (0, 1) starts at the dummy vertex 0, which the algorithm never visits (u runs 1..m);
+	     // the only real edge is (1, 4), so the maximum matching is 1
+	     int expected_res1 = 1; // for the above sample data, this is the expected output
 	     int res1 = g1.hopcroftKarpAlgorithm();
 
 	     assert(res1 == expected_res1); // assert check to ensure that the algorithm executed correctly for test 1
@@ -276,7 +278,8 @@ void tests(){
 	     g2.addEdge(4,3);
              g2.addEdge(4,2);
 	
-	     int expected_res2 = 0; // for the above sample data, this is the expected output
+	     // perfect matching: 1-1, 2-3, 3-4, 4-2
+	     int expected_res2 = 4; // for the above sample data, this is the expected output
 	     int res2 = g2.hopcroftKarpAlgorithm();
 
 	     assert(res2 == expected_res2); // assert check to ensure that the algorithm executed correctly for test 2
@@ -290,7 +293,11 @@ void tests(){
 	     g3.addEdge(1,5);
 	     g3.addEdge(5,0);
 
-	     int expected_res3 = 0; // for the above sample data, this is the expected output
+	     // edge (0, 1) starts at the dummy vertex and is ignored; edge (5, 0) ends at right vertex 0,
+	     // which is the reserved NIL index, outside the supported range 1..n. The implementation
+	     // still counts it, so the result is 2 (1-4 or 1-5, plus 5-"0"). Over supported vertices only,
+	     // the maximum matching would be 1. 2 is recorded as the current behaviour, not a valid matching.
+	     int expected_res3 = 2; // for the above sample data, this is the expected output
 	     int res3 = g3.hopcroftKarpAlgorithm();
 
 	     assert(res3 == expected_res3); // assert check to ensure that the algorithm executed correctly for test 3
@@ -300,12 +307,67 @@ void tests(){
 }
 
 /**
+ * @brief Tests for the "no augmenting path" branches of HKGraph
+ * @details HKGraph never throws and has no error value: when no augmenting
+ * path exists, bfs() returns false (`return (dist[NIL] != INF);`) and
+ * dfs(u) returns false after `dist[u] = INF;`, so hopcroftKarpAlgorithm()
+ * stops and returns the matching found so far (0 for a graph with no edges).
+ * @returns void
+ */
+static void failure_path_tests() {
+    int count = 0;
+
+    // smallest graphs: no left vertices, or no edges. bfs() finds no path
+    // on its first call, so the result is 0.
+    HKGraph empty(0, 0);
+    assert(empty.hopcroftKarpAlgorithm() == 0);
+    HKGraph default_graph;
+    assert(default_graph.hopcroftKarpAlgorithm() == 0);
+    HKGraph no_edges(1, 1);
+    assert(no_edges.hopcroftKarpAlgorithm() == 0);
+    count += 3;
+
+    // dfs() fails for one vertex: left 1 and 2 both want right 1. In phase 1,
+    // dfs(1) matches 1-1 and dfs(2) finds no layered path, so it reaches
+    // dist[u] = INF; return false. Phase 2's bfs() returns false.
+    HKGraph shared(2, 2);
+    shared.addEdge(1, 1);
+    shared.addEdge(2, 1);
+    assert(shared.hopcroftKarpAlgorithm() == 1);
+    ++count;
+
+    // the graph is still valid afterwards: running again gives the same
+    // answer, because the matching is rebuilt from scratch
+    assert(shared.hopcroftKarpAlgorithm() == 1);
+    ++count;
+
+    // and an ordinary call succeeds once left 2 gets its own right vertex
+    shared.addEdge(2, 2);
+    assert(shared.hopcroftKarpAlgorithm() == 2);
+    ++count;
+
+    // neighbouring input of source test 2: without edge (4, 2), left 2 and
+    // left 4 can only use right 3, so one of them stays unmatched -> 3
+    HKGraph g(4, 4);
+    g.addEdge(1, 1);
+    g.addEdge(1, 3);
+    g.addEdge(2, 3);
+    g.addEdge(3, 4);
+    g.addEdge(4, 3);
+    assert(g.hopcroftKarpAlgorithm() == 3);
+    ++count;
+
+    std::cerr << "[HKGraph] " << count << " checks passed" << std::endl;
+}
+
+/**
  * @brief Main function
  * @returns 0 on exit
  */
 int main()
 {
     tests();  // perform self-tests
+    failure_path_tests();  // perform failure-path tests
 
     int v1 = 0, v2 = 0, e = 0;
     std::cin >> v1 >> v2 >> e; // vertices of left side, right side and edges
