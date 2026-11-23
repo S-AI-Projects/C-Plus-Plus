@@ -1,0 +1,4 @@
+$ cmake -S . -B build-R22-T025 -DCMAKE_BUILD_TYPE=Debug -DUSE_OPENMP=OFF
+$ cmake --build build-R22-T025 --target segtree
+$ build-R22-T025/range_queries/segtree
+segtree: /home/claude/C-Plus-Plus/range_queries/segtree.cpp:245: void test_repeatable(): Assertion `reused == expected7' failed.

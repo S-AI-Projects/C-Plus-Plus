@@ -28,6 +28,13 @@
 /**
  * @brief   Constructs the initial segment tree
  *
+ * @details ConsTree() depends only on its arguments: it reads `arr` (const),
+ * writes `segtree` at the nodes covering `arr[low..high]`, and uses no time,
+ * randomness, I/O or global state. Building the same input twice gives the
+ * same tree. Nodes that `arr` does not reach are left as they were, so a
+ * reused `segtree` can keep old values in those slots; query() never visits
+ * them, so query results are not affected.
+ *
  * @param   arr input to construct the tree out of
  * @param   segtree the segment tree
  * @param   low inclusive lowest index of arr to begin at
@@ -161,12 +168,112 @@ static void test() {
 }
 
 /**
+ * @brief   Sum arr[lo..hi] directly, as an independent reference
+ * @param   arr values
+ * @param   lo first index (included)
+ * @param   hi last index (included)
+ * @returns the sum
+ */
+static int64_t brute_sum(const std::vector<int64_t> &arr, uint64_t lo,
+                         uint64_t hi) {
+    int64_t sum = 0;
+    for (uint64_t k = lo; k <= hi; ++k) sum += arr[k];
+    return sum;
+}
+
+/**
+ * @brief   Check every range query of a built tree against brute_sum()
+ * @param   arr values the tree was built from
+ * @param   segtree built tree (queried on a copy, so it is not changed)
+ * @returns the number of assertions checked
+ */
+static int check_all_ranges(const std::vector<int64_t> &arr,
+                            const std::vector<int64_t> &segtree) {
+    int count = 0;
+    const uint64_t n = arr.size();
+    for (uint64_t lo = 0; lo < n; ++lo) {
+        for (uint64_t hi = lo; hi < n; ++hi) {
+            std::vector<int64_t> tree = segtree, lazy(segtree.size(), 0);
+            assert(query(&tree, &lazy, lo, hi, 0, n - 1, 0) ==
+                   brute_sum(arr, lo, hi));
+            ++count;
+        }
+    }
+    return count;
+}
+
+/**
+ * @brief   Repeatability and input-isolation tests for ConsTree()
+ *
+ * @returns void
+ */
+static void test_repeatable() {
+    int count = 0;
+    const std::vector<int64_t> arr{1, 2, 3, 4, 5, 6, 7};
+    const std::vector<int64_t> arr_copy = arr;
+    // hand-worked tree for {1..7}: root [0,6] = 28, [0,3] = 10, [4,6] = 18,
+    // [0,1] = 3, [2,3] = 7, [4,5] = 11, leaf [6] = 7, leaves 1..6; slots 13
+    // and 14 are not used for n = 7 and stay 0
+    const std::vector<int64_t> expected7{28, 10, 18, 3, 7, 11, 7, 1,
+                                         2,  3,  4,  5, 6, 0,  0};
+
+    // run 1 and run 2, each in fresh state
+    std::vector<int64_t> first(15, 0), second(15, 0);
+    ConsTree(arr, &first, 0, 7 - 1, 0);
+    ConsTree(arr, &second, 0, 7 - 1, 0);
+    assert(first == expected7);
+    assert(second == expected7);
+    assert(arr == arr_copy);  // input isolation: arr is not modified
+    count += 3;
+    count += check_all_ranges(arr, first);
+
+    // neighbouring supported input: n = 8, a full tree with no unused slots
+    const std::vector<int64_t> arr8{1, 2, 3, 4, 5, 6, 7, 8};
+    const std::vector<int64_t> expected8{36, 10, 26, 3, 7, 11, 15, 1,
+                                         2,  3,  4,  5, 6, 7,  8};
+    std::vector<int64_t> tree8(15, 0);
+    ConsTree(arr8, &tree8, 0, 8 - 1, 0);
+    assert(tree8 == expected8);
+    ++count;
+    count += check_all_ranges(arr8, tree8);
+
+    // run 3: after another valid input of the same size in the same vector,
+    // every used node is overwritten, so the result equals a fresh build
+    std::vector<int64_t> reused(15, 0);
+    ConsTree({7, 6, 5, 4, 3, 2, 1}, &reused, 0, 7 - 1, 0);
+    ConsTree(arr, &reused, 0, 7 - 1, 0);
+    assert(reused == expected7);
+    ++count;
+
+    // after a larger input (n = 8) in the same vector, slots 13 and 14 keep
+    // the old leaves 7 and 8; the n = 7 queries are still correct
+    std::vector<int64_t> stale = expected8;
+    ConsTree(arr, &stale, 0, 7 - 1, 0);
+    assert(stale[13] == 7 && stale[14] == 8);
+    assert(std::vector<int64_t>(stale.begin(), stale.begin() + 13) ==
+           std::vector<int64_t>(expected7.begin(), expected7.begin() + 13));
+    count += 2;
+    count += check_all_ranges(arr, stale);
+
+    // the source fixture still holds
+    std::vector<int64_t> lazy(15, 0), segtree(15, 0);
+    ConsTree(arr, &segtree, 0, 7 - 1, 0);
+    assert(query(&segtree, &lazy, 1, 5, 0, 7 - 1, 0) == 2 + 3 + 4 + 5 + 6);
+    update(&segtree, &lazy, 2, 4, 1, 0, 7 - 1, 0);
+    assert(query(&segtree, &lazy, 1, 5, 0, 7 - 1, 0) == 2 + 4 + 5 + 6 + 6);
+    count += 2;
+
+    std::cerr << "[ConsTree] " << count << " checks passed" << std::endl;
+}
+
+/**
  * @brief   Main function
  *
  * @return  0 on exit
  */
 int main() {
-    test();  // run self-test implementations
+    test();             // run self-test implementations
+    test_repeatable();  // run repeatability tests for ConsTree
 
     std::cout << "Enter number of elements: ";
 
