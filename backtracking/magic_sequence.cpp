@@ -20,6 +20,8 @@
 #include <iostream>   /// for IO operations
 #include <list>       /// for std::list
 #include <numeric>    /// for std::accumulate
+#include <sstream>    /// for std::ostringstream
+#include <string>     /// for std::string
 #include <vector>     /// for std::vector
 
 /**
@@ -96,19 +98,108 @@ void solve(sequence_t* s, std::list<sequence_t>* ret, unsigned int depth = 0) {
 }  // namespace backtracking
 
 /**
+ * @brief Capture what print() writes to std::cout
+ * @param s sequence to print
+ * @returns the exact text print() wrote
+ */
+static std::string capture_print(
+    const backtracking::magic_sequence::sequence_t& s) {
+    std::ostringstream buffer;
+    std::streambuf* old_buf = std::cout.rdbuf(buffer.rdbuf());
+    backtracking::magic_sequence::print(s);
+    std::cout.rdbuf(old_buf);
+    return buffer.str();
+}
+
+/**
+ * @brief Make a newline visible in the test report
+ * @param text text to show
+ * @returns the text with each newline written as a backslash and n
+ */
+static std::string visible(const std::string& text) {
+    std::string out;
+    for (const char c : text) {
+        if (c == '\n') {
+            out += "\\n";
+        } else {
+            out += c;
+        }
+    }
+    return out;
+}
+
+/**
+ * @brief Regression check for print(): compares the exact printed text and
+ * checks separately that the input sequence was not modified
+ * @param name label of the case
+ * @param s input sequence
+ * @param expected text worked out by hand before running the code
+ * @param count number of checks run so far, increased on each assertion
+ */
+static void check_print(const std::string& name,
+                        const backtracking::magic_sequence::sequence_t& s,
+                        const std::string& expected, int* count) {
+    const backtracking::magic_sequence::sequence_t before = s;
+    const std::string actual = capture_print(s);
+    std::cerr << "[print] " << name << ": expected \"" << visible(expected)
+              << "\" actual \"" << visible(actual) << "\"" << std::endl;
+    // returned value: the exact text written to std::cout
+    assert(actual == expected);
+    ++*count;
+    // observable mutation: print takes a const reference, the input must be
+    // unchanged afterwards
+    assert(s == before);
+    ++*count;
+}
+
+/**
  * @brief Self-test implementations
  * @returns void
  */
 static void test() {
+    int count = 0;
+
     // test a valid magic sequence
     backtracking::magic_sequence::sequence_t s_magic = {6, 2, 1, 0, 0,
                                                         0, 1, 0, 0, 0};
     assert(backtracking::magic_sequence::is_magic(s_magic));
+    ++count;
 
     // test a non-valid magic sequence
     backtracking::magic_sequence::sequence_t s_not_magic = {5, 2, 1, 0, 0,
                                                             0, 1, 0, 0, 0};
     assert(!backtracking::magic_sequence::is_magic(s_not_magic));
+    ++count;
+
+    // print() contract: every value followed by one space, then a newline
+
+    // ordinary input: the fixture magic sequence (n = 10)
+    check_print("ordinary n=10 fixture", s_magic, "6 2 1 0 0 0 1 0 0 0 \n",
+                &count);
+
+    // non-magic input is printed the same way: print() does not validate
+    check_print("non-magic fixture", s_not_magic, "5 2 1 0 0 0 1 0 0 0 \n",
+                &count);
+
+    // neighbouring supported input (n = 11), worked out by hand:
+    // 0 appears 7 times, 1 twice, 2 once, 7 once, everything else 0 times
+    backtracking::magic_sequence::sequence_t s_neighbour = {7, 2, 1, 0, 0, 0,
+                                                            0, 1, 0, 0, 0};
+    assert(backtracking::magic_sequence::is_magic(s_neighbour));
+    ++count;
+    check_print("neighbour n=11", s_neighbour, "7 2 1 0 0 0 0 1 0 0 0 \n",
+                &count);
+
+    // smallest input: an empty sequence prints only the newline
+    check_print("smallest (empty)", {}, "\n", &count);
+
+    // smallest non-empty input: one value
+    check_print("single value", {0}, "0 \n", &count);
+
+    // repeated-value boundary: identical values are all printed, none merged
+    check_print("repeated values", {3, 3, 3, 3}, "3 3 3 3 \n", &count);
+
+    std::cerr << "[print] " << count << " checks passed" << std::endl;
 }
 
 /**

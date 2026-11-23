@@ -1,0 +1,10 @@
+$ cmake -S . -B /home/claude/C-Plus-Plus/build-R22-T021 -DCMAKE_BUILD_TYPE=Debug -DUSE_OPENMP=OFF
+$ cmake --build /home/claude/C-Plus-Plus/build-R22-T021 --target magic_sequence
+$ build-R22-T021/backtracking/magic_sequence
+[print] ordinary n=10 fixture: expected "6 2 1 0 0 0 1 0 0 0 \n" actual "6 2 1 0 0 0 1 0 0 0 \n"
+[print] non-magic fixture: expected "5 2 1 0 0 0 1 0 0 0 \n" actual "5 2 1 0 0 0 1 0 0 0 \n"
+[print] neighbour n=11: expected "7 2 1 0 0 0 0 1 0 0 0 \n" actual "7 2 1 0 0 0 0 1 0 0 0 \n"
+[print] smallest (empty): expected "\n" actual "\n"
+[print] single value: expected "0 \n" actual "0 \n"
+[print] repeated values: expected "3 3 3 3 \n" actual "3 3 3 3 \n"
+[print] 15 checks passed
