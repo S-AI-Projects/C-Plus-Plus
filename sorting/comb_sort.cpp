@@ -18,6 +18,9 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <cstddef>
+#include <utility>
+#include <vector>
 
 /**
  *
@@ -26,10 +29,12 @@
  * @return new gap
  *
  */
-int FindNextGap(int gap) {
-    gap = (gap * 10) / 13;
+/** Shrink the current gap by the Comb Sort factor 10/13. */
+static int shrinkGapByFactor(int gap) { return (gap * 10) / 13; }
 
-    return std::max(1, gap);
+int FindNextGap(int gap) {
+    const int shrunken_gap = shrinkGapByFactor(gap);
+    return std::max(1, shrunken_gap);
 }
 
 /** Function to sort array
@@ -71,6 +76,34 @@ void CombSort(int *arr, int l, int r) {
 }
 
 void tests() {
+    const std::vector<std::pair<std::vector<int>, std::vector<int>>> fixtures = {
+        {{3, 1, 2}, {1, 2, 3}},
+        {{2, 2, 1}, {1, 2, 2}},
+        {{1, 2, 3}, {1, 2, 3}},
+        {{3, 2, 1}, {1, 2, 3}},
+        {{}, {}},
+        {{7}, {7}},
+    };
+    size_t fixture_index = 0;
+    for (const auto &fixture : fixtures) {
+        std::vector<int> output = fixture.first;
+        CombSort(output.data(), 0, static_cast<int>(output.size()));
+        assert(output == fixture.second);
+        std::cout << "FIXTURE " << fixture_index++ << " input=[";
+        for (size_t index = 0; index < fixture.first.size(); index++) {
+            std::cout << (index ? "," : "") << fixture.first[index];
+        }
+        std::cout << "] actual=[";
+        for (size_t index = 0; index < output.size(); index++) {
+            std::cout << (index ? "," : "") << output[index];
+        }
+        std::cout << "]\n";
+    }
+    assert(FindNextGap(13) == 10);
+    assert(FindNextGap(2) == 1);
+    assert(FindNextGap(1) == 1);
+    assert(FindNextGap(0) == 1);
+
     /// Test 1
     int arr1[10] = {34, 56, 6, 23, 76, 34, 76, 343, 4, 76};
     CombSort(arr1, 0, 10);
@@ -82,6 +115,7 @@ void tests() {
     CombSort(arr2, 0, 8);
     assert(std::is_sorted(arr2, arr2 + 8));
     std::cout << "Test 2 Passed\n";
+    std::cout << "Comb sort fixture cases passed: " << fixtures.size() << '\n';
 }
 
 /** Main function */
