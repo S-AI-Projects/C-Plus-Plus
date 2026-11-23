@@ -1,0 +1,47 @@
+{
+  "task": "R22-T017",
+  "student": "Mohit Sharma",
+  "branch": "student/e26b07f0869/R22-T017",
+  "contract_source": "others/fast_integer_input.cpp:9-20 documents the accepted input; lines 27-45 parse an optional minus, decimal digits, and apply the sign.",
+  "examples": [
+    {
+      "input": "0\n",
+      "expected": 0,
+      "trace": [
+        0
+      ],
+      "actual": 0,
+      "stdout": "0\n"
+    },
+    {
+      "input": "-2048\n",
+      "expected": -2048,
+      "trace": [
+        2,
+        20,
+        204,
+        2048
+      ],
+      "actual": -2048,
+      "stdout": "-2048\n"
+    }
+  ],
+  "compile_command": [
+    "c++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wno-register",
+    "-Werror=vla",
+    "/Users/aryansingh/Documents/Codex/2026-11-23/mohit-cpp/others/fast_integer_input.cpp",
+    "-o",
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t017-ikepzwxg/fast_integer_input"
+  ],
+  "compiler_version": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+  "python_version": "Python 3.15.2",
+  "compile_exit_code": 0,
+  "all_example_exit_codes": [
+    0,
+    0
+  ]
+}

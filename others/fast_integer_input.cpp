@@ -3,10 +3,20 @@
  * @brief Read integers from stdin continuously as they are entered without
  * waiting for the `\n` character
  */
+#include <cstdio>
 #include <iostream>
 
-/** Function to read the number from stdin. The function reads input until a non
- * numeric character is entered.
+/**
+ * Read one signed decimal integer from the current stdin position. The input
+ * must begin with an optional '-' followed by at least one digit, fit in int,
+ * and end with a non-digit (or EOF); whitespace and '+' are not skipped.
+ *
+ * Worked examples (the accumulator is updated once per digit):
+ * - Input `0\n`: digit `0` changes 0 to 0; newline stops the loop; result 0.
+ * - Input `-2048\n`: '-' records the sign; digits give 2 → 20 → 204 → 2048;
+ *   newline stops the loop and applying the sign returns -2048.
+ *
+ * @param number receives the parsed integer
  */
 void fastinput(int *number) {
     // variable to indicate sign of input integer
