@@ -1,0 +1,58 @@
+{
+  "task": "R22-T020",
+  "student": "Mohit Sharma",
+  "branch": "student/e26b07f0869/R22-T020",
+  "fixture": {
+    "inserted": [
+      4,
+      2,
+      6,
+      1,
+      3,
+      5,
+      7
+    ],
+    "inorder": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ]
+  },
+  "expected": {
+    "root_4_successor": 5,
+    "leaf_1_successor": 2,
+    "child_links_and_reachability": "valid"
+  },
+  "actual": {
+    "root_4_successor": 5,
+    "leaf_1_successor": 2,
+    "child_links_and_reachability": "assertions passed"
+  },
+  "mutation": {
+    "changed": "current->data < ancestor->data to current->data > ancestor->data",
+    "exit_code": -6,
+    "rejected": true
+  },
+  "compile_command": [
+    "c++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wno-register",
+    "-Werror=vla",
+    "/Users/aryansingh/Documents/Codex/2026-11-23/mohit-cpp/operations_on_datastructures/inorder_successor_of_bst.cpp",
+    "-o",
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t020-blr38jv4/inorder_successor"
+  ],
+  "run_command": [
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t020-blr38jv4/inorder_successor"
+  ],
+  "compiler_version": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+  "python_version": "Python 3.15.2",
+  "compile_exit_code": 0,
+  "run_exit_code": 0
+}

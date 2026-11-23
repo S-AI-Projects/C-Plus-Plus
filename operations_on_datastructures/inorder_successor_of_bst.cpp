@@ -246,6 +246,7 @@ class TestCases {
         testCase_1();
         testCase_2();
         testCase_3();
+        testCase_4();
 
         log("Test Cases over!");
         std::cout << std::endl;
@@ -377,6 +378,34 @@ class TestCases {
 
         log("[PASS] : TEST CASE 3 PASS!");
         log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    }
+
+    /**
+     * @brief Protect the root-right-subtree and leaf-ancestor successor cases.
+     * The comparison in getInorderSuccessor must keep a smaller current node
+     * on the ancestor's left branch to retain the closest successor.
+     */
+    void testCase_4() {
+        using operations_on_datastructures::inorder_traversal_of_bst::Node;
+        using operations_on_datastructures::inorder_traversal_of_bst::deallocate;
+        using operations_on_datastructures::inorder_traversal_of_bst::getInorderSuccessor;
+        using operations_on_datastructures::inorder_traversal_of_bst::makeBST;
+
+        Node *root = makeBST(nullptr, std::vector<int64_t>{4, 2, 6, 1, 3, 5, 7});
+        assert(root->data == 4);
+        assert(root->left != nullptr && root->left->data == 2);
+        assert(root->right != nullptr && root->right->data == 6);
+        assert(root->left->left != nullptr && root->left->left->data == 1);
+        assert(root->left->right != nullptr && root->left->right->data == 3);
+        assert(root->right->left != nullptr && root->right->left->data == 5);
+        assert(root->right->right != nullptr && root->right->right->data == 7);
+
+        Node *root_successor = getInorderSuccessor(root, 4);
+        Node *leaf_successor = getInorderSuccessor(root, 1);
+        assert(root_successor != nullptr && root_successor->data == 5);
+        assert(leaf_successor != nullptr && leaf_successor->data == 2);
+        std::cout << "BST fixture passed: root successor=5, leaf successor=2\n";
+        deallocate(root);
     }
 };
 
