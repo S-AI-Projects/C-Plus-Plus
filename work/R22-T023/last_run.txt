@@ -1,0 +1,5 @@
+$ cmake -S . -B build-R22-T023 -DCMAKE_BUILD_TYPE=Debug -DUSE_OPENMP=OFF
+$ cmake --build build-R22-T023 --target slow_sort
+$ build-R22-T023/sorting/slow_sort
+[SlowSort] [3, 1, 2]: expected [1, 2, 3] actual [3, 2, 1]
+slow_sort: /home/claude/C-Plus-Plus/sorting/slow_sort.cpp:74: int check_full(const std::vector<int>&, const std::vector<int>&): Assertion `std::is_sorted(a.begin(), a.end())' failed.
