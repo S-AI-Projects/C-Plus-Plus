@@ -130,8 +130,8 @@ def main():
     preconditions = [
         ("Line 17", "int values[10];", "Fixed-size capacity boundary of 10 discs per tower."),
         ("Line 19", "int top;", "Top counter tracking current disc count; valid range 0 <= top <= 10."),
-        ("Line 32", "void show(const struct tower *const F, ...)", "Non-null valid tower pointers; read-only const contract."),
-        ("Lines 35, 39, 43", "for (int i = 0; i < top; i++)", "Discs values[0..top-1] must be initialized prior to calling show.")
+        ("Lines 43-44", "void show(const struct tower *const F, ...)", "Non-null valid tower pointers; read-only const contract."),
+        ("Lines 46, 50, 54", "for (int i = 0; i < top; i++)", "Discs values[0..top-1] must be initialized prior to calling show.")
     ]
     for line, code, desc in preconditions:
         print(f"  - {line}: `{code}` -> {desc}")

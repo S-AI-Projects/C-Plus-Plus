@@ -1,5 +1,21 @@
 # Analysis and Notes: `show` in `others/tower_of_hanoi.cpp`
 
+## Current line numbers (updated after the boundary comments were added)
+
+The notes further down were taken on the original upstream file, before the Task 2 tests and comments existed. Use this table to find each item in the current file:
+
+| Item | Original upstream line(s) | Current line(s) |
+|---|---|---|
+| `int values[10];` (capacity) | 13 | 17 |
+| `int top;` (disc count) | 15 | 19 |
+| Doxygen comment above `show` (boundary table, domain, note) | 18 | 22–42 |
+| `void show(...)` signature | 19–20 | 43–44 |
+| `show` body | 21–32 | 45–56 |
+| F / U / T loops `for (int i = 0; i < X->top; i++)` | 22, 26, 30 | 46, 50, 54 |
+| Disc print `X->values[i] << "\t"` | 23, 27, 31 | 47, 51, 55 |
+| Tests (each has a `//` boundary comment as its first line) | — | 108–243 |
+| Original interactive `main` (towers set to `top = 0`, discs loaded) | 66–79 | replaced by `main() { test(); }` in Task 2 |
+
 Based on lines 18–33 of [others/tower_of_hanoi.cpp](file:///Users/prishi/C-Plus-Plus/others/tower_of_hanoi.cpp#L18-L33):
 
 ```cpp
