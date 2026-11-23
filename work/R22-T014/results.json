@@ -1,0 +1,161 @@
+{
+  "task": "R22-T014",
+  "student": "Mohit Sharma",
+  "branch": "student/e26b07f0869/R22-T014",
+  "contract_source": "sorting/wiggle_sort.cpp:42-76; documents the peak-at-even-indices wave pattern and implements a copied return value without input mutation.",
+  "fixtures": [
+    {
+      "input": [
+        3,
+        1,
+        2
+      ],
+      "expected": [
+        3,
+        1,
+        2
+      ]
+    },
+    {
+      "input": [
+        2,
+        2,
+        1
+      ],
+      "expected": [
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "input": [
+        1,
+        2,
+        3
+      ],
+      "expected": [
+        2,
+        1,
+        3
+      ]
+    },
+    {
+      "input": [
+        3,
+        2,
+        1
+      ],
+      "expected": [
+        3,
+        1,
+        2
+      ]
+    },
+    {
+      "input": [],
+      "expected": []
+    },
+    {
+      "input": [
+        7
+      ],
+      "expected": [
+        7
+      ]
+    }
+  ],
+  "fixture_actuals": [
+    {
+      "index": 0,
+      "input": [
+        3,
+        1,
+        2
+      ],
+      "actual": [
+        3,
+        1,
+        2
+      ]
+    },
+    {
+      "index": 1,
+      "input": [
+        2,
+        2,
+        1
+      ],
+      "actual": [
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "index": 2,
+      "input": [
+        1,
+        2,
+        3
+      ],
+      "actual": [
+        2,
+        1,
+        3
+      ]
+    },
+    {
+      "index": 3,
+      "input": [
+        3,
+        2,
+        1
+      ],
+      "actual": [
+        3,
+        1,
+        2
+      ]
+    },
+    {
+      "index": 4,
+      "input": [],
+      "actual": []
+    },
+    {
+      "index": 5,
+      "input": [
+        7
+      ],
+      "actual": [
+        7
+      ]
+    }
+  ],
+  "fixed_seed_generated_cases": 100,
+  "native_cases_passed": 106,
+  "mutant": {
+    "condition_changed": "out[i] < out[i + 1] \u2192 out[i] > out[i + 1]",
+    "exit_code": -6,
+    "rejected": true
+  },
+  "compile_command": [
+    "c++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wno-register",
+    "-Werror=vla",
+    "/Users/aryansingh/Documents/Codex/2026-11-23/mohit-cpp/sorting/wiggle_sort.cpp",
+    "-o",
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t014-9tzoxcnj/wiggle_sort"
+  ],
+  "run_command": [
+    "/var/folders/cr/jdqkd5w95kq5h5b32qjsdx3m0000gn/T/r22-t014-9tzoxcnj/wiggle_sort"
+  ],
+  "compiler_version": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+  "python_version": "Python 3.15.2",
+  "compile_exit_code": 0,
+  "run_exit_code": 0
+}

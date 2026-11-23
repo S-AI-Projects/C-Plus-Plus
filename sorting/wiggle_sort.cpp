@@ -19,9 +19,12 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cstddef>
 #include <cstdint>
 #include <ctime>
 #include <iostream>  /// for io operations
+#include <random>
+#include <utility>
 #include <vector>
 
 /**
@@ -40,6 +43,8 @@ namespace wiggle_sort {
  *
  * @brief Function used for sorting the elements in wave form.
  * @details
+ * The returned copy satisfies out[0] >= out[1] <= out[2] >= out[3] ... and
+ * preserves every input value. The input vector is not modified.
  * Checking whether the even indexed elements are greater than
  * their adjacent odd elements.
  * Traversing all even indexed elements of the input arr.
@@ -105,23 +110,63 @@ static void displayElements(const std::vector<T> &arr) {
  * @returns void
  */
 static void test() {
-    std::srand(std::time(nullptr));  // initialize random number generator
+    using IntVector = std::vector<int>;
+    const std::vector<std::pair<IntVector, IntVector>> fixtures = {
+        {{3, 1, 2}, {3, 1, 2}},
+        {{2, 2, 1}, {2, 1, 2}},
+        {{1, 2, 3}, {2, 1, 3}},
+        {{3, 2, 1}, {3, 1, 2}},
+        {{}, {}},
+        {{7}, {7}},
+    };
+    size_t checked_cases = 0;
 
-    std::vector<float> data1(100);
-    for (auto &d : data1) {  // generate random numbers between -5.0 and 4.99
-        d = float(std::rand() % 1000 - 500) / 100.f;
+    const auto check_invariants = [&checked_cases](const IntVector &input) {
+        const IntVector original = input;
+        const IntVector output = sorting::wiggle_sort::wiggleSort(input);
+        IntVector input_values = input;
+        IntVector output_values = output;
+        std::sort(input_values.begin(), input_values.end());
+        std::sort(output_values.begin(), output_values.end());
+        assert(output_values == input_values);  // multiplicities are preserved
+        assert(input == original);              // source is not mutated
+        for (size_t index = 0; index + 1 < output.size(); index++) {
+            if (index % 2 == 0) {
+                assert(output[index] >= output[index + 1]);
+            } else {
+                assert(output[index] <= output[index + 1]);
+            }
+        }
+        checked_cases++;
+    };
+
+    for (size_t fixture_index = 0; fixture_index < fixtures.size(); fixture_index++) {
+        const auto &fixture = fixtures[fixture_index];
+        const IntVector output = sorting::wiggle_sort::wiggleSort(fixture.first);
+        assert(output == fixture.second);
+        std::cout << "FIXTURE " << fixture_index << " input=[";
+        for (size_t index = 0; index < fixture.first.size(); index++) {
+            std::cout << (index ? "," : "") << fixture.first[index];
+        }
+        std::cout << "] output=[";
+        for (size_t index = 0; index < output.size(); index++) {
+            std::cout << (index ? "," : "") << output[index];
+        }
+        std::cout << "]\n";
+        check_invariants(fixture.first);
     }
 
-    std::vector<float> sorted = sorting::wiggle_sort::wiggleSort<float>(data1);
-
-    displayElements(sorted);
-
-    for (uint32_t j = 0; j < data1.size(); j += 2) {
-        assert(data1[j] <= data1[j + 1] &&
-               data1[j + 1] >= data1[j + 2]);  // check the validation condition
+    std::mt19937 generator(0x5A17U);
+    std::uniform_int_distribution<int> size_distribution(0, 30);
+    std::uniform_int_distribution<int> value_distribution(-10, 10);
+    for (int sample = 0; sample < 100; sample++) {
+        IntVector input(static_cast<size_t>(size_distribution(generator)));
+        for (int &value : input) {
+            value = value_distribution(generator);
+        }
+        check_invariants(input);
     }
-
-    std::cout << "Test 1 passed\n";
+    std::cout << "Wiggle cases passed: " << checked_cases << '\n';
 }
 
 /** Driver Code */
