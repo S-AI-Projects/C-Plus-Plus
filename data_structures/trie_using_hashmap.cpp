@@ -12,8 +12,12 @@
  */
 #include <cassert>        /// for assert
 #include <iostream>       /// for IO operations
+#include <algorithm>      /// for std::sort
 #include <memory>         /// for std::shared_ptr
+#include <random>         /// for std::mt19937
+#include <set>            /// for std::set
 #include <stack>          /// for std::stack
+#include <string>         /// for std::string
 #include <unordered_map>  /// for std::unordered_map
 #include <vector>         /// for std::vector
 
@@ -35,6 +39,14 @@ namespace trie_using_hashmap {
  * for all the characters of char16_t(UTF-16)type with methods to insert,
  * delete, search, start with and to recommend words based on a given
  * prefix.
+ * @details Invariant, for the set W of non-empty words inserted so far:
+ * - `search(w)` is true exactly when w is in W. A prefix that was never
+ *   inserted as a word, such as "ca" after inserting "car", is not a word.
+ * - `startwith(p)` is true exactly when p is a prefix of some word in W.
+ * - Inserting a word never removes another word, and inserting the same word
+ *   again changes nothing.
+ * The empty string is never stored as a word (see the `curr != root_node`
+ * check in insert()).
  */
 class Trie {
  private:
@@ -336,10 +348,119 @@ static void test() {
 }
 
 /**
+ * @brief Compare the trie with a reference std::set of the inserted words
+ * @param trie trie under test
+ * @param words reference set of inserted words
+ * @param query a word or prefix to look up
+ * @param label case description printed when a check fails
+ * @returns the number of assertions checked
+ */
+static int check_against_model(data_structures::trie_using_hashmap::Trie* trie,
+                               const std::set<std::string>& words,
+                               const std::string& query,
+                               const std::string& label) {
+    bool is_prefix = false;
+    std::vector<std::string> with_prefix;
+    for (const std::string& w : words) {
+        if (w.compare(0, query.size(), query) == 0) {
+            is_prefix = true;
+            with_prefix.push_back(w);
+        }
+    }
+    const bool expect_word = words.count(query) == 1;
+    std::vector<std::string> predicted = trie->predict_words(query);
+    std::sort(predicted.begin(), predicted.end());
+    const bool ok = trie->search(query) == expect_word &&
+                    trie->startwith(query) == is_prefix &&
+                    predicted == with_prefix;
+    if (!ok) {
+        std::cerr << "[Trie] FAILED on " << label << ", query \"" << query
+                  << "\"" << std::endl;
+    }
+    assert(trie->search(query) == expect_word);
+    assert(trie->startwith(query) == is_prefix);
+    assert(predicted == with_prefix);
+    return 3;
+}
+
+/**
+ * @brief Property tests for the Trie invariant
+ * @returns void
+ */
+static void test_invariant() {
+    int count = 0;
+
+    // readable fixture
+    data_structures::trie_using_hashmap::Trie trie;
+    trie.insert("car");
+    trie.insert("cat");
+    trie.insert("dog");
+    assert(trie.search("car") == true);    // complete word
+    assert(trie.search("ca") == false);    // only a prefix
+    assert(trie.startwith("ca") == true);  // ...but a valid prefix
+    assert(trie.search("cat") == true);    // "car" did not remove "cat"
+    assert(trie.search("dog") == true);
+    assert(trie.search("do") == false);
+    assert(trie.startwith("cab") == false);
+    count += 7;
+    trie.insert("car");  // repeated insertion
+    assert(trie.search("car") == true);
+    assert(trie.search("cat") == true);
+    assert(trie.search("ca") == false);
+    count += 3;
+    std::vector<std::string> ca = trie.predict_words("ca");
+    std::sort(ca.begin(), ca.end());
+    assert((ca == std::vector<std::string>{"car", "cat"}));
+    ++count;
+
+    // generated cases: fixed seed, words of length 1..4 over {a, b, c}
+    std::mt19937 rng(20261123);
+    std::uniform_int_distribution<int> length(1, 4);
+    std::uniform_int_distribution<int> letter(0, 2);
+    std::uniform_int_distribution<int> how_many(1, 6);
+    auto random_word = [&]() {
+        std::string w;
+        const int n = length(rng);
+        for (int k = 0; k < n; ++k) w += static_cast<char>('a' + letter(rng));
+        return w;
+    };
+    const int cases = 200;
+    for (int c = 0; c < cases; ++c) {
+        data_structures::trie_using_hashmap::Trie t;
+        std::set<std::string> model;
+        const int inserts = how_many(rng);
+        for (int k = 0; k < inserts; ++k) {
+            const std::string w = random_word();
+            t.insert(w);
+            model.insert(w);
+            const std::string label =
+                "case " + std::to_string(c) + " after inserting " + w;
+            // no earlier word was removed
+            for (const std::string& earlier : model) {
+                assert(t.search(earlier));
+                ++count;
+            }
+            count += check_against_model(&t, model, w, label);
+            count += check_against_model(&t, model, w.substr(0, 1), label);
+            count += check_against_model(&t, model, random_word(), label);
+        }
+        // inserting a word again changes nothing
+        const std::string again = *model.begin();
+        t.insert(again);
+        count += check_against_model(&t, model, again, "repeat");
+        count += check_against_model(&t, model, again.substr(0, 1), "repeat");
+    }
+    std::cerr << "[Trie] " << cases << " generated cases (seed 20261123)"
+              << std::endl;
+    std::cerr << "[Trie] " << count << " checks passed" << std::endl;
+}
+
+/**
  * @brief Main function
  * @returns 0 on exit
  */
 int main() {
-    test();  // run self-test implementaions
+    test_invariant();  // run the invariant/property tests first
+    test();            // run self-test implementaions
     return 0;
 }

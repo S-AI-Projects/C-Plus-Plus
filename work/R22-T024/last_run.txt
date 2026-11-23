@@ -1,0 +1,8 @@
+$ cmake -S . -B build-R22-T024 -DCMAKE_BUILD_TYPE=Debug -DUSE_OPENMP=OFF
+$ cmake --build build-R22-T024 --target trie_using_hashmap
+$ build-R22-T024/data_structures/trie_using_hashmap
+[Trie] 200 generated cases (seed 20261123)
+[Trie] 9753 checks passed
+
+mutant (search ignores word_end) exit code: -6
+mutant: /tmp/tmplsdos34s/mutant.cpp:399: void test_invariant(): Assertion `trie.search("ca") == false' failed.
